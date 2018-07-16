@@ -1,0 +1,23 @@
+<% provide(:title, "Utility Services") %>
+<h1>Utility Services</h1>
+<div class="form>
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_tag("/response", method: "get") do %>
+      <%= label_tag(:request, "Request Type:") %>
+      <% requestoptions = options_for_select([
+        ["Unit Type Information Request", "UnitTypeInfoRequest"],
+        ["Site Type Information Request", "SiteTypeInfoRequest"],
+        ["Notes and Terms Request", "NotesAndTermsRequest"]])%>
+      <%= select_tag(:request, requestoptions) %>
+    
+      <%= label_tag(:parkID, "Park ID:") %>
+      <%= text_field_tag(:parkID) %>
+      
+      <%= label_tag(:securityKey, "Security Key:") %>
+      <%= text_field_tag(:securityKey) %>
+      
+      <%= submit_tag("Test") %>
+    <% end %>
+  </div>
+  <p>Test.</p>
+</div>

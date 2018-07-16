@@ -1,10 +1,8 @@
 class UtilityServicesController < ApplicationController
-  def unit
+  def generic
   end
-
-  def site
-  end
-
-  def note
+  
+  def response
+    
   end
 end
