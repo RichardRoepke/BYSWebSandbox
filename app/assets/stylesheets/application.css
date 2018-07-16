@@ -13,3 +13,93 @@
  *= require_tree .
  *= require_self
  */
+
+body { font-family: Verdana, Helvetica, Arial; color: #333; background-color: #fff; margin: 0; padding: 0; font-size: 12px; }
+
+a { color: #dc0000; text-decoration: none; }
+
+a:hover { text-decoration: underline; }
+
+a img { border: 0; }
+
+h1, h2, h3, h4, h5 { font-weight: normal; font-family: "Helvetica Neue", Helvetica, Verdana; margin-top: 0; }
+
+h1 { font-size: 28px; }
+
+h2 { font-size: 24px; }
+
+h3 { font-size: 18px; }
+
+input[type='checkbox'] { font-size: 16px; width: 20px; }
+input[type='submit'] { font-size: 16px; width: 100px; }
+input[type='text'] { font-size: 16px; width: 100%;}
+textarea { font-size: 16px; width: 100%; height: 200px; }
+select { font-size: 16px; width: 100% }
+
+form { max-width: 800px; }
+
+select { margin-top: 5px; }
+fieldset { border: 0; }
+
+th { font-weight: normal; }
+
+small { padding: 2px; color: #555; }
+
+td, th { vertical-align: top; padding-right: 10px; }
+
+th { padding-top: 7px; text-align: right; white-space: nowrap; }
+
+#container { text-align: center; }
+
+#page { width: 960px; margin: 0 auto; text-align: left; }
+
+#header { background-color: #504f4f; padding: 10px 0; }
+
+#logo { padding: 0 10px; }
+
+/* page banner */
+.pagebanner { font-weight: bolder; font-family: "Helvetica Neue", Helvetica, Verdana; background-color: #ccc; padding: 10px 20px; color: #888; }
+.pagebanner .topic { color: #333; }
+.pagebanner .subject { color: #555; }
+.pagebanner a.button { background-color: #aaa; color: #000; padding: 3px 10px; font-weight: normal; margin-right: 10px; font-size: 12px; }
+.pagebanner a.button:hover { background-color: #dc0000; color: #fff; }
+
+.subnav { font-weight: bolder; font-family: "Helvetica Neue", Helvetica, Verdana; background-color: #ddd; padding: 10px 20px; color: #888; }
+.subnav a.button { background-color: #aaa; color: #000; padding: 3px 10px; font-weight: normal; margin-right: 10px; font-size: 12px; }
+.subnav a.button:hover { background-color: #dc0000; color: #fff; }
+
+/* maincontent */
+.maincontent { padding: 10px; }
+
+#sidebar { width: 300px; float: left; margin-right: 10px; }
+
+#maincontent { width: 630px; float: left; }
+
+#content { padding: 0; }
+
+#footer { clear: both; padding-top: 20px; margin-top: 20px; margin-bottom: 20px; border-top: 1px solid #ddd; color: #ccc; }
+
+/* form content */
+.formcontent { font-size: 12px; }
+.formcontent fieldset { margin-bottom: 10px; border: 1px solid #ccc; }
+.formcontent legend { padding: 0 2px; font-weight: bold; }
+.formcontent label { display: inline-block; line-height: 1.8; vertical-align: top; }
+.formcontent fieldset ol { margin: 0; padding: 0; }
+.formcontent fieldset li { list-style: none; padding: 5px; margin: 0; }
+.formcontent label { width: 120px; }
+.formcontent label.wide { width: 220px; margin-right: 20px; }
+
+/* table settings */
+table.formgroup td { padding: 2px 5px; vertical-align: top; }
+
+/* error stuff */
+.notice { border: 1px solid #a32122; background-color: #f6f4e4; padding: 10px; margin: 0 0 10px 0; color: #7c261d; }
+
+.fieldWithErrors { display: inline; }
+
+.fieldWithErrors input { border: 1px solid #a32122; padding: 2px; }
+
+.errorExplanation { border: 1px solid #a32122; background-color: #f6f4e4; padding: 10px; margin: 0 0 10px 0; }
+.errorExplanation h1, .errorExplanation h2, .errorExplanation h3, .errorExplanation h4, .errorExplanation h5 { margin: 0; padding: 0; color: #a32122; }
+
+#login { padding: 50px; }
