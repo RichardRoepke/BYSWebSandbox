@@ -1,7 +1,7 @@
 require 'builder'
 
 class UtilityServicesController < ApplicationController
-  def generic
+  def utility
     if params[:utility_form]
       @request = params[:utility_form][:requestID].to_s
       @park = params[:utility_form][:parkID].to_s
@@ -13,28 +13,22 @@ class UtilityServicesController < ApplicationController
     end
     
     if params[:info]
+      request_valid = UtilityValidator.new
+      request_valid.requestID = @request
+      request_valid.parkID = @park
+      request_valid.securityKey = @security
+        
+      if request_valid.valid?
+        @request_xml = buildXML
+      else
+        @errors = request_valid.errors
+      end
+    end
+      
+    if @request_xml.present?
       if params[:info] == "Check XML"
         @xmlshow = true
-      else
-        @xmlshow = false
-      end
-      
-      if params[:info] == "Check XML" || params[:info] == "Submit"
-        request_valid = UtilityValidator.new
-        request_valid.requestID = @request
-        request_valid.parkID = @park
-        request_valid.securityKey = @security
-        
-        @request_xml = buildXML if request_valid.valid?
-        
-        unless request_valid.valid?
-          @errors = request_valid.errors
-        end
-      else
-        @request_xml = nil
-      end
-      
-      if params[:info] == "Submit" && @request_xml.present?
+      elsif params[:info] == "Submit"
         puts "Yep."
       end
     end

@@ -23,10 +23,9 @@
       
       <%= f.submit "Check XML", name: "info" %>
       <%= f.submit "Submit", name: "info" %>
-      <%= f.submit "Clear", name: "info" %>
     <% end %>
   </div>
   
-  <%= render 'shared/requestxml' unless @request_xml.nil? || !@xmlshow %>
+  <%= render 'shared/requestxml' if @xmlshow.present? %>
   
 </div>

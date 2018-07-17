@@ -142,6 +142,10 @@ table.formgroup td { padding: 2px 5px; vertical-align: top; }
 
 /* miscellaneous */
 
+.formatXML {
+  margin: 0 0 10px 0;
+}
+
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
   -webkit-box-sizing: border-box;
