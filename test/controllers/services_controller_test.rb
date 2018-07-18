@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UtilityServicesControllerTest < ActionDispatch::IntegrationTest
+class ServicesControllerTest < ActionDispatch::IntegrationTest
   def setup
     @requestIDs = ["UnitTypeInfoRequest", 
                    "SiteTypeInfoRequest", 

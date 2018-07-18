@@ -1,7 +1,7 @@
 require 'builder'
 require 'rexml/document'
 
-class UtilityServicesController < ApplicationController
+class ServicesController < ApplicationController
   def utility
     if params[:utility_form]
       @request = params[:utility_form][:requestID].to_s
