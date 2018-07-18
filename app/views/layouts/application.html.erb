@@ -16,10 +16,17 @@
           <div class="alert"><%= message %></div>
         <% end %>
         
+        <h1><%= yield(:title) %></h1>
+        <hr/>
+
+        <%= render :partial => 'shared/requesterrors' if @requesterrors.present? %>
+        
         <%= yield %>
 
-        <%= #debug(params) if Rails.env.development? 
-        %>
+        <%= render 'shared/responsefail' if @responsefail.present? %>
+        <%= render 'shared/showxml' if @xml.present? && @xmltitle.present? %>
+        
+        <%= debug(params) if Rails.env.development? %>
       </div>
   </body>
 </html>

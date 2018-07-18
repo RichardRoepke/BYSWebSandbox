@@ -1,11 +1,6 @@
 <% provide(:title, "Utility Services") %>
-<h1>Utility Services</h1>
 
-<hr />
-
-<%= render :partial => 'shared/requesterrors' if @requesterrors.present? %>
-
-<div class="form>
+<div class="form">
   <div class="col-md-6 col-md-offset-3">
     <%= form_for :utility_form, method: :get do |f| %>
       <%= f.label :requestID, "Service Requests ID" %>
@@ -25,10 +20,5 @@
       <%= f.submit "Check XML", name: "info" %>
       <%= f.submit "Submit", name: "info" %>
     <% end %>
-  </div>
-  
-  <%= render 'shared/responsefail' if @responsefail.present? %>
-  
-  <%= render 'shared/showxml' if @xml.present? && @xmltitle.present? %>
-  
+  </div>  
 </div>
