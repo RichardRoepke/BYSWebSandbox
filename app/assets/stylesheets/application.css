@@ -36,7 +36,9 @@ input[type='text'] { font-size: 16px; width: 100%;}
 textarea { font-size: 16px; width: 100%; height: 200px; }
 select { font-size: 16px; width: 100% }
 
-form { max-width: 800px; }
+form {
+  max-width: 800px;
+}
 
 select { margin-top: 5px; }
 fieldset { border: 0; }
@@ -58,7 +60,17 @@ th { padding-top: 7px; text-align: right; white-space: nowrap; }
 #logo { padding: 0 10px; }
 
 /* page banner */
-.pagebanner { font-weight: bolder; font-family: "Helvetica Neue", Helvetica, Verdana; background-color: #ccc; padding: 10px 20px; color: #888; }
+.pagebanner {
+  font-weight: bolder;
+  font-family: "Helvetica Neue", Helvetica, Verdana;
+  background-color: #ccc;
+  padding: 20px;
+  color: #888;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+}
+
 .pagebanner .topic { color: #333; }
 .pagebanner .subject { color: #555; }
 .pagebanner a.button { background-color: #aaa; color: #000; padding: 3px 10px; font-weight: normal; margin-right: 10px; font-size: 12px; }
@@ -69,15 +81,27 @@ th { padding-top: 7px; text-align: right; white-space: nowrap; }
 .subnav a.button:hover { background-color: #dc0000; color: #fff; }
 
 /* maincontent */
-.maincontent { padding: 10px; }
+.maincontent { 
+  margin-left: 10px;
+  margin-top: 54px;
+  padding: 10px; 
+}
 
-#sidebar { width: 300px; float: left; margin-right: 10px; }
+/*#sidebar { width: 300px; float: left; margin-right: 10px; }*/
 
 #maincontent { width: 630px; float: left; }
 
 #content { padding: 0; }
 
-#footer { clear: both; padding-top: 20px; margin-top: 20px; margin-bottom: 20px; border-top: 1px solid #ddd; color: #ccc; }
+.footer {
+  clear: both;
+  padding-top: 1px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-top: 1px solid #ddd;
+  color: #ccc;
+  float: right;
+}
 
 /* form content */
 .formcontent { font-size: 12px; }
@@ -103,3 +127,34 @@ table.formgroup td { padding: 2px 5px; vertical-align: top; }
 .errorExplanation h1, .errorExplanation h2, .errorExplanation h3, .errorExplanation h4, .errorExplanation h5 { margin: 0; padding: 0; color: #a32122; }
 
 #login { padding: 50px; }
+
+/* Sidebar */
+.sidebar {
+  height: 100%;
+  overflow-x: hidden;
+  top: 54px;
+  width: 180px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  background-color: #eee; /* Light Grey */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding: 10px;
+}
+
+/* miscellaneous */
+
+.formatXML {
+  margin: 0 0 10px 0;
+}
+
+@mixin box_sizing {
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+}
+
+.debug_dump {
+  clear: both;
+  float: right;
+  margin-top: 10px;
+  @include box_sizing;
+}
