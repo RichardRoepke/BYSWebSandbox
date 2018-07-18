@@ -11,16 +11,15 @@
 
   <body>
     <%= render 'layouts/header' %>
-    <%= render 'layouts/sidebar' %>
       <div class="maincontent">
         <% flash.each do |message_type, message| %>
           <div class="alert"><%= message %></div>
         <% end %>
         
         <%= yield %>
-        <%= #render 'layouts/footer'
+
+        <%= #debug(params) if Rails.env.development? 
         %>
-        <%= debug(params) if Rails.env.development? %>
       </div>
   </body>
 </html>

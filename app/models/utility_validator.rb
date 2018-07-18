@@ -5,7 +5,7 @@ class UtilityValidator
   attr_accessor :parkID
   attr_accessor :securityKey
 
-  validates :requestID, inclusion: { in: %w{UnitTypeInfoRequest SiteTypeInfoRequest NotesAndTermsRequest}}
+  validates :requestID, inclusion: { in: %w{UnitTypeInfoRequest SiteTypeInfoRequest NotesAndTermsRequest BYSPublicKeyRequest}, message: "Non-valid Service Request ID."}
   validates :parkID, length: { is: 6, message: "Camp Ground User Name must be 6 characters"}
   validates :parkID, format: { with: /\A^M.*\z/, message: "Camp Ground User Name must start with a M" }
   validates :parkID, format: { with: /\A^[a-zA-Z0-9_]*\z/, message: "Camp Ground User Name can only be made out of alphanumeric characters."}

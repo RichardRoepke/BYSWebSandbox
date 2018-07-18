@@ -27,6 +27,11 @@ class UtilityValidatorTest < ActiveSupport::TestCase
     assert @utility.valid?
   end
   
+  test "accept BYSPublicKeyRequest" do  
+    @utility.requestID = "BYSPublicKeyRequest"
+    assert @utility.valid?
+  end
+  
   test "reject non-standard requestIDs" do   
     @utility.requestID = "Wrong"
     assert_not @utility.valid?

@@ -1,0 +1,14 @@
+<hr/>
+
+<h3>XML <%= @xmltitle%></h3>
+
+<% if @xmlfaulttitle.present? %>
+  <div class="errorExplanation">
+    <h3><%= @xmlfaulttitle %></h3>
+    <%= @xmlfaulttext if @xmlfaulttext.present? %>
+  </div>
+<% end %>
+
+<div class="formatXML">
+  <pre><%= @xml.to_s.strip %></pre>
+</div>

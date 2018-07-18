@@ -4,7 +4,12 @@ class UtilityServicesControllerTest < ActionDispatch::IntegrationTest
   def setup
     @requestIDs = ["UnitTypeInfoRequest", 
                    "SiteTypeInfoRequest", 
-                   "NotesAndTermsRequest"]
+                   "NotesAndTermsRequest",
+                   "BYSPublicKeyRequest"]
+                   
+    @utilityform = { requestID: @requestIDs[0],
+                     parkID: "MC1994",
+                     securityKey: "yes" }
   end
   
   test "should be setup properly" do
@@ -41,10 +46,27 @@ class UtilityServicesControllerTest < ActionDispatch::IntegrationTest
     get utility_path
     assert_response :success
     get utility_path, params: { info: "Check XML",
-                                 utility_form: { requestID: @requestIDs[0],
-                                                 parkID: "MC0000",
-                                                 securityKey: "yes" } }
+                                 utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
+  end
+  
+  test "generate and show proper xml on submit" do
+    get utility_path
+    assert_response :success
+    get utility_path, params: { info: "Submit",
+                                 utility_form: @utilityform }
+    assert_select "div[class=?]", "formatXML"
+  end
+  
+  test "error on requesting park not in database" do
+    get utility_path
+    assert_response :success
+    
+    @utilityform[:parkID] = "MC0000"
+    get utility_path, params: { info: "Submit",
+                                 utility_form: @utilityform }
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation"
   end
 
 end

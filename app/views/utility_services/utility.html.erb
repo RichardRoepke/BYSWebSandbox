@@ -3,7 +3,7 @@
 
 <hr />
 
-<%= render :partial => 'shared/requesterrors', :locals => { :errors => @errors } unless @errors.nil? %>
+<%= render :partial => 'shared/requesterrors' if @requesterrors.present? %>
 
 <div class="form>
   <div class="col-md-6 col-md-offset-3">
@@ -12,7 +12,8 @@
       <% requestoptions = options_for_select([
         ["Unit Type Information Request", "UnitTypeInfoRequest"],
         ["Site Type Information Request", "SiteTypeInfoRequest"],
-        ["Notes and Terms Request", "NotesAndTermsRequest"]], @request)%>
+        ["Notes and Terms Request", "NotesAndTermsRequest"],
+        ["BYS Public Key Request", "BYSPublicKeyRequest"]], @request)%>
       <%= f.select(:requestID, requestoptions) %>
       
       <%= f.label :parkID, "Camp Ground User Name" %>
@@ -26,6 +27,8 @@
     <% end %>
   </div>
   
-  <%= render 'shared/requestxml' if @xmlshow.present? %>
+  <%= render 'shared/responsefail' if @responsefail.present? %>
+  
+  <%= render 'shared/showxml' if @xml.present? && @xmltitle.present? %>
   
 </div>
