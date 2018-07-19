@@ -20,9 +20,13 @@ class ServicesController < ApplicationController
     if params[:availability_form]
       @park = params[:availability_form][:park_ID].to_s
       @security = params[:availability_form][:security_key].to_s
+      @arrival = params[:availability_form][:arrival_date].to_s
+      @nights = params[:availability_form][:num_nights].to_s
     else
       @park = ""
       @security = ""
+      @arrival = ""
+      @nights = ""
     end
     
     resolve_user_action(params[:user_action], params[:availability_form], "AvailabilityRequest") if params[:user_action].present?
@@ -100,7 +104,9 @@ class ServicesController < ApplicationController
   
   def generate_validator(user_input, service_type)   
     if service_type == "UtilityService"
-      return UtilityValidator.new(user_input)
+      return ServiceValidator.new(user_input)
+    elsif service_type == "AvailabilityRequest"
+      return AvailabilityValidator.new(user_input)
     else
       return nil
     end
