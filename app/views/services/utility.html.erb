@@ -1,0 +1,26 @@
+<% provide(:title, "Utility Services") %>
+
+<div class="form">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for :utility_form, method: :get do |f| %>
+      <%= f.label :request_ID, "Service Requests ID" %>
+      <% requestoptions = options_for_select([
+        ["Unit Type Information Request", "UnitTypeInfoRequest"],
+        ["Site Type Information Request", "SiteTypeInfoRequest"],
+        ["Notes and Terms Request", "NotesAndTermsRequest"],
+        ["BYS Public Key Request", "BYSPublicKeyRequest"]], @request)%>
+      <%= f.select(:request_ID, requestoptions) %>
+      
+      <%= f.label :park_ID, "Camp Ground User Name" %>
+      <%= f.text_field :park_ID, value: @park %>
+      
+      <%= f.label :security_key, "Camp Ground Security Key" %>
+      <%= f.text_field :security_key, value: @security %>
+      
+      <hr />
+      
+      <%= f.submit "Check XML", name: "user_action" %>
+      <%= f.submit "Submit", name: "user_action" %>
+    <% end %>
+  </div>  
+</div>
