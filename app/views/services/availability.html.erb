@@ -2,30 +2,33 @@
 
 <div class="form">
   <div class="col-md-6 col-md-offset-3">
-    <%= form_for :utility_form, method: :get do |f| %>     
-      <%= f.label :parkID, "Camp Ground User Name" %>
-      <%= f.text_field :parkID, value: @park %>
+    <%= form_for :availability_form, method: :get do |f| %>     
+      <%= f.label :park_ID, "Camp Ground User Name" %>
+      <%= f.text_field :park_ID, value: @park %>
       
-      <%= f.label :securityKey, "Camp Ground Security Key" %>
-      <%= f.text_field :securityKey, value: @security %>
+      <%= f.label :security_key, "Camp Ground Security Key" %>
+      <%= f.text_field :security_key, value: @security %>
       
-      <%= f.label :arrivalDate, "Arrival Date" %>
-      <%= f.text_field :arrivalDate, value: @arrival %>
+      <%= f.label :arrival_date, "Arrival Date" %>
+      <%= f.text_field :arrival_date, value: @arrival %>
       
-      <%= f.label :arrivalDate, "Arrival Date" %>
-      <%= f.text_field :arrivalDate, value: @arrival %>
+      <%= f.label :num_nights, "Number of Nights" %>
+      <%= f.text_field :num_nights, value: @nights %>
       
-      <%= f.label :arrivalDate, "Arrival Date" %>
-      <%= f.text_field :arrivalDate, value: @arrival %>
+      <%= f.label :internal_UID, "Unit Type Internal UID" %>
+      <%= f.text_field :internal_UID, value: @internal %>
       
-      <%= f.label :arrivalDate, "Arrival Date" %>
-      <%= f.text_field :arrivalDate, value: @arrival %>
+      <%= f.label :type_ID, "Unit Type ID" %>
+      <%= f.text_field :type_ID, value: @type # Is always overwritten by UID.
+       %>
       
-      <%= f.label :arrivalDate, "Arrival Date" %>
-      <%= f.text_field :arrivalDate, value: @arrival %>
+      <%= f.label :unit_length, "Unit Length (Leave blank to not include)" %>
+      <%= f.text_field :unit_length, value: @length %>
       
-      <%= f.label :arrivalDate, "Arrival Date" %>
-      <%= f.text_field :arrivalDate, value: @arrival %>
+      <%= f.label :request_unav, "Request Unavailable?" %>
+      <%= f.check_box :request_unav, value: @unavailable %>
+      
+      <hr />
       
       <%= f.submit "Check XML", name: "userAction" %>
       <%= f.submit "Submit", name: "userAction" %>

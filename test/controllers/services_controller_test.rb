@@ -7,9 +7,9 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                    "NotesAndTermsRequest",
                    "BYSPublicKeyRequest"]
                    
-    @utilityform = { requestID: @requestIDs[0],
-                     parkID: "MC1994",
-                     securityKey: "yes" }
+    @utilityform = { request_ID: @requestIDs[0],
+                     park_ID: "MC1994",
+                     security_key: "yes" }
   end
   
   test "should be setup properly" do
@@ -17,14 +17,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "title", "BYS Web Sandbox: Utility Services"
     
-    assert_select "select[id=?]", "utility_form_requestID"
+    assert_select "select[id=?]", "utility_form_request_ID"
     
     @requestIDs.each do |id|
       assert_select "option[value=?]", id
     end
     
-    assert_select "input[id=?]", "utility_form_parkID"
-    assert_select "input[id=?]", "utility_form_securityKey"
+    assert_select "input[id=?]", "utility_form_park_ID"
+    assert_select "input[id=?]", "utility_form_security_key"
     
     assert_select "input[value=?]", "Check XML"
     assert_select "input[value=?]", "Submit"
@@ -35,26 +35,26 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "check for improper values" do
     get utility_path
     assert_response :success
-    get utility_path, params: { operation: "Check XML",
-                                 utility_form: { requestID: "",
-                                                 parkID: "",
-                                                 securityKey: "" } }
+    get utility_path, params: { user_action: "Check XML",
+                                utility_form: { request_ID: "",
+                                                park_ID: "",
+                                                security_key: "" } }
     assert_select "div[class=?]", "errorExplanation", count: 4
   end
   
   test "generate and show proper xml on request" do
     get utility_path
     assert_response :success
-    get utility_path, params: { operation: "Check XML",
-                                 utility_form: @utilityform }
+    get utility_path, params: { user_action: "Check XML",
+                                utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
   end
   
   test "generate and show proper xml on submit" do
     get utility_path
     assert_response :success
-    get utility_path, params: { operation: "Submit",
-                                 utility_form: @utilityform }
+    get utility_path, params: { user_action: "Submit",
+                                utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
   end
   
@@ -62,9 +62,9 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     get utility_path
     assert_response :success
     
-    @utilityform[:parkID] = "MC0000"
-    get utility_path, params: { operation: "Submit",
-                                 utility_form: @utilityform }
+    @utilityform[:park_ID] = "MC0000"
+    get utility_path, params: { user_action: "Submit",
+                                utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
     assert_select "div[class=?]", "errorExplanation"
   end

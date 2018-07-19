@@ -2,9 +2,9 @@ require 'test_helper'
 
 class UtilityValidatorTest < ActiveSupport::TestCase
   def setup
-    setup = {requestID: "UnitTypeInfoRequest",
-             parkID: "M00000",
-             securityKey: "yes"}
+    setup = {request_ID: "UnitTypeInfoRequest",
+             park_ID: "M00000",
+             security_key: "yes"}
     @utility = UtilityValidator.new(setup)
   end
   
@@ -13,52 +13,52 @@ class UtilityValidatorTest < ActiveSupport::TestCase
   end
   
   test "accept SiteTypeInfoRequest" do
-    @utility.requestID = "SiteTypeInfoRequest"
+    @utility.request_ID = "SiteTypeInfoRequest"
     assert @utility.valid?
   end
   
   test "accept NotesAndTermsRequest" do  
-    @utility.requestID = "NotesAndTermsRequest"
+    @utility.request_ID = "NotesAndTermsRequest"
     assert @utility.valid?
   end
   
   test "accept UnitTypeInfoRequest" do  
-    @utility.requestID = "UnitTypeInfoRequest"
+    @utility.request_ID = "UnitTypeInfoRequest"
     assert @utility.valid?
   end
   
   test "accept BYSPublicKeyRequest" do  
-    @utility.requestID = "BYSPublicKeyRequest"
+    @utility.request_ID = "BYSPublicKeyRequest"
     assert @utility.valid?
   end
   
   test "reject non-standard requestIDs" do   
-    @utility.requestID = "Wrong"
+    @utility.request_ID = "Wrong"
     assert_not @utility.valid?
   end
   
   test "park ID cannot be too short" do
-    @utility.parkID = "M"
+    @utility.park_ID = "M"
     assert_not @utility.valid?
   end
   
   test "park ID cannot be too long" do  
-    @utility.parkID = "M123456"
+    @utility.park_ID = "M123456"
     assert_not @utility.valid?
   end
   
   test "park ID must start with M" do  
-    @utility.parkID = "000000"
+    @utility.park_ID = "000000"
     assert_not @utility.valid?
   end
   
   test "park ID must use alphanumeric" do
-    @utility.parkID = "M#####"
+    @utility.park_ID = "M#####"
     assert_not @utility.valid?
   end
   
   test "security key must exist" do
-    @utility.securityKey = nil
+    @utility.security_key = nil
     assert_not @utility.valid?
   end
   

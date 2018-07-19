@@ -19,12 +19,12 @@
         <h1><%= yield(:title) %></h1>
         <hr/>
 
-        <%= render :partial => 'shared/requesterrors' if @requesterrors.present? %>
+        <%= render :partial => 'shared/requesterrors' if @request_errors.present? %>
         
         <%= yield %>
 
-        <%= render 'shared/responsefail' if @responsefail.present? %>
-        <%= render 'shared/showxml' if @xml.present? && @xmltitle.present? %>
+        <%= render 'shared/responsefail' if @response_fail.present? %>
+        <%= render 'shared/showxml' if @xml.present? && @xml_title.present? %>
         
         <%= debug(params) if Rails.env.development? %>
       </div>

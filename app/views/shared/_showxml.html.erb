@@ -1,11 +1,11 @@
 <hr/>
 
-<h3><%= @xmltitle%></h3>
+<h3><%= @xml_title%></h3>
 
-<% if @xmlfaulttitle.present? %>
+<% if @xml_fault_title.present? %>
   <div class="errorExplanation">
-    <h3><%= @xmlfaulttitle %></h3>
-    <%= @xmlfaulthelp if @xmlfaulthelp.present? %>
+    <h3><%= @xml_fault_title %></h3>
+    <%= @xml_fault_help if @xml_fault_help.present? %>
   </div>
 <% end %>
 
