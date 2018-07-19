@@ -2,10 +2,10 @@ require 'test_helper'
 
 class UtilityValidatorTest < ActiveSupport::TestCase
   def setup
-    @utility = UtilityValidator.new
-    @utility.requestID = "UnitTypeInfoRequest"
-    @utility.parkID = "M00000"
-    @utility.securityKey = "yes"
+    setup = {requestID: "UnitTypeInfoRequest",
+             parkID: "M00000",
+             securityKey: "yes"}
+    @utility = UtilityValidator.new(setup)
   end
   
   test "should be valid" do

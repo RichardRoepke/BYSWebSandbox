@@ -35,7 +35,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "check for improper values" do
     get utility_path
     assert_response :success
-    get utility_path, params: { info: "Check XML",
+    get utility_path, params: { operation: "Check XML",
                                  utility_form: { requestID: "",
                                                  parkID: "",
                                                  securityKey: "" } }
@@ -45,7 +45,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "generate and show proper xml on request" do
     get utility_path
     assert_response :success
-    get utility_path, params: { info: "Check XML",
+    get utility_path, params: { operation: "Check XML",
                                  utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
   end
@@ -53,7 +53,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test "generate and show proper xml on submit" do
     get utility_path
     assert_response :success
-    get utility_path, params: { info: "Submit",
+    get utility_path, params: { operation: "Submit",
                                  utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
   end
@@ -63,7 +63,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     
     @utilityform[:parkID] = "MC0000"
-    get utility_path, params: { info: "Submit",
+    get utility_path, params: { operation: "Submit",
                                  utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
     assert_select "div[class=?]", "errorExplanation"

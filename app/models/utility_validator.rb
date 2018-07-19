@@ -11,4 +11,10 @@ class UtilityValidator
   validates :parkID, format: { with: /\A^[a-zA-Z0-9_]*\z/, message: "Camp Ground User Name can only be made out of alphanumeric characters."}
   validates :securityKey, presence: { message: "Security Key is required" }
   #validates :securityKey, format: { with: /\A^[a-zA-Z0-9_]*\z/, message: "Security Key can only be made out of alphanumeric characters."}
+  
+  def initialize(form)
+    @requestID = form[:requestID].to_s
+    @parkID = form[:parkID].to_s
+    @securityKey = form[:securityKey].to_s
+  end
 end

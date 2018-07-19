@@ -12,13 +12,13 @@
       <%= f.select(:requestID, requestoptions) %>
       
       <%= f.label :parkID, "Camp Ground User Name" %>
-      <%= f.text_field :parkID, value:@park %>
+      <%= f.text_field :parkID, value: @park %>
       
       <%= f.label :securityKey, "Camp Ground Security Key" %>
-      <%= f.text_field :securityKey, value:@security %>
+      <%= f.text_field :securityKey, value: @security %>
       
-      <%= f.submit "Check XML", name: "info" %>
-      <%= f.submit "Submit", name: "info" %>
+      <%= f.submit "Check XML", name: "userAction" %>
+      <%= f.submit "Submit", name: "userAction" %>
     <% end %>
   </div>  
 </div>

@@ -13,69 +13,112 @@ class ServicesController < ApplicationController
       @security = ""
     end
     
-    if params[:info]
-      request_valid = UtilityValidator.new
-      request_valid.requestID = @request
-      request_valid.parkID = @park
-      request_valid.securityKey = @security
-        
-      if request_valid.valid?
-        @request_xml = buildServicesXML(@request, @park, @security)
-      else
-        @requesterrors = request_valid.errors
-      end
+    resolveUserAction(params[:userAction], params[:utility_form], "UtilityService") if params[:userAction].present?
+  end
+  
+  def availability
+    if params[:utility_form]
+      @request = params[:utility_form][:requestID].to_s
+      @park = params[:utility_form][:parkID].to_s
+      @security = params[:utility_form][:securityKey].to_s
+    else
+      @request = "UnitTypeInfoRequest" 
+      @park = ""
+      @security = ""
     end
-      
-    if @request_xml.present?
-      if params[:info] == "Check XML"
-        @xml = @request_xml
-        @xmltitle = "Request"
-      elsif params[:info] == "Submit"
-        response = Typhoeus::Request.post( "https://54.197.134.112:3400/" + @request.chomp("Request").downcase, 
+    
+    resolveUserAction(params[:userAction], params[:availability_form], "AvailabilityRequest") if params[:userAction].present?
+  end
+  
+  def resolveUserAction(userAction, userInput, serviceType)
+    requestXML = generateXMLIfValid(userInput, serviceType)
+    
+    if requestXML.present?
+      if userAction == "Check XML"
+        @xmltitle = "Service Request"
+        @xml = requestXML
+      elsif userAction == "Submit"
+        serviceResponse = Typhoeus::Request.post( generatePath(userInput, serviceType), 
                                            headers: {'Content-Type' => 'text/xml'},
-                                           body: @request_xml,
-                                           :ssl_verifyhost => 0 )
-                                           
-        if response.success? && response.response_body.present?
-          @xmltitle = "Response"
-          @xml = response.response_body
+                                           body: requestXML,
+                                           :ssl_verifyhost => 0 ) #Server is set as verified but without proper certification.
+        
+        # In certain cases Web Services may complete the connection but send
+        # nothing in response. So a successful request doesn't mean a response
+        # was received in return.
+        if serviceResponse.success? && serviceResponse.response_body.present?
+          @xmltitle = "Service Response"
+          @xml = serviceResponse.response_body
           
           doc = REXML::Document.new @xml
+          
+          # Quick and simple way to find if a fault was sent by the server.
           doc.each_element("//Fault"){ |f|
             
-            @xmlfaulttitle = "ERROR (" + f.children[1].text + "): " + f.children[3].text
-            @xmlfaulttext = errorHelp(f.children[1].text)
+            f.each_element("//FaultCode"){ |c|
+              @xmlfaulttitle = "ERROR (" + c.text + "): "
+              
+              @xmlfaulthelp = generateTroubleshooting(c.text)
+              }
             
+            f.each_element("//FaultMessage") { |m|
+              @xmlfaulttitle += m.text
+              }
             }
         else
-          if response.success?
+          if serviceResponse.success?
             @responsefail = "Connection was successful but web services responded with an empty message body. Please verify your inputs and try again."
           else
-            @responsefail = response.code.to_s
-            @responsefail += ": " + response.return_message unless response.return_message == "No error"
+            @responsefail = serviceResponse.code.to_s
+            @responsefail += ": " + serviceResponse.return_message unless serviceResponse.return_message == "No error"
           end
         end
       end
     end
-  end
+  end # - resolveAction
   
-  def validateInputs(form, type)
-    if type == "UtilityService"
-      validator = UtilityValidator.new
-      validator.requestID = form[:requestID].to_s
-      validator.parkID = form[:parkID].to_s
-      validator.securityKey = form[:parkID].to_s
-      
-      return validator
+  def generatePath(userInput, serviceType)
+    if serviceType == "UtilityService"
+      return "https://54.197.134.112:3400/" + userInput[:requestID].to_s.chomp("Request").downcase
     end
   end
   
-  def buildServicesXML(request, park, security)
-    #temp = nil
+  def generateXMLIfValid(userInput, serviceType)
+    output = nil
     
+    validator = generateValidator(userInput, serviceType)
+  
+    if validator.present?
+      if validator.valid?
+        output = buildRequestXML(userInput, serviceType)
+      else
+        @requesterrors = validator.errors
+      end
+    end
+    
+    return output
+  end
+  
+  def generateValidator(userInput, serviceType)   
+    if serviceType == "UtilityService"
+      return UtilityValidator.new(userInput)
+    else
+      return nil
+    end
+  end
+  
+  def buildRequestXML(userInput, serviceType)
+    if serviceType == "UtilityService"
+      return buildUtilityXML(userInput[:requestID], userInput[:parkID], userInput[:securityKey])
+    else
+      return nil
+    end
+  end
+  
+  def buildUtilityXML(request, park, security)
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct! :xml, :version=>"1.0" #:content_type=>"text/xml" #, :encoding=>"UTF-8"
-    xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', "xsi:noNamespaceSchemaLocation"=>'file:/home/bys/Desktop/SHARE/xml2/SiteTypeInfoRequest/siteTypeInfoRequest.xsd')  {
+    xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', "xsi:noNamespaceSchemaLocation"=>'file:/home/bys/Desktop/SHARE/xml2/' + request + '/' + utilityXSDPath(request) + '.xsd')  {
       xml.tag!("Body") {
         xml.tag!(request.chomp("Request").downcase){
           xml.tag!("RequestData"){
@@ -90,9 +133,19 @@ class ServicesController < ApplicationController
         }
       }
     }
+  end # - buildUtilityXML
+  
+  def utilityXSDPath(request)
+    if request == "UnitTypeInfoRequest"
+      return "unitTypeInfoRequest"
+    elsif request == "SiteTypeInfoRequest"
+      return "siteTypeInfoRequest"
+    else
+      return request
+    end
   end
   
-  def errorHelp(errorcode)
+  def generateTroubleshooting(errorcode)
     unexpected = "Web services unexpectedly failed to validate your request. Please double-check that all of your inputs are correct."
     
     case errorcode
@@ -108,6 +161,6 @@ class ServicesController < ApplicationController
     when "BYSUK99" then unexpected
     else nil
     end
-  end
+  end # - generateTroubleshooting
 
 end
