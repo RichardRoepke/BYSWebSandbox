@@ -2,68 +2,35 @@ require 'test_helper'
 
 class UtilityValidatorTest < ActiveSupport::TestCase
   def setup
-    setup = {request_ID: "UnitTypeInfoRequest",
+    form = {request_ID: "UnitTypeInfoRequest",
              park_ID: "M00000",
              security_key: "yes"}
-    @utility = UtilityValidator.new(setup)
+    @utility = UtilityValidator.new(form)
   end
   
-  test "should be valid" do
-    assert @utility.valid?
-  end
-  
-  test "accept SiteTypeInfoRequest" do
-    @utility.request_ID = "SiteTypeInfoRequest"
-    assert @utility.valid?
-  end
-  
-  test "accept NotesAndTermsRequest" do  
-    @utility.request_ID = "NotesAndTermsRequest"
-    assert @utility.valid?
-  end
-  
-  test "accept UnitTypeInfoRequest" do  
+  test "xsd_path should generate proper responses" do
     @utility.request_ID = "UnitTypeInfoRequest"
-    assert @utility.valid?
-  end
-  
-  test "accept BYSPublicKeyRequest" do  
+    assert_equal @utility.XSD_path(), "unitTypeInfoRequest"
+    @utility.request_ID = "SiteTypeInfoRequest"
+    assert_equal @utility.XSD_path(), "siteTypeInfoRequest"
+    @utility.request_ID = "NotesAndTermsRequest"
+    assert_equal @utility.XSD_path(), "NotesAndTermsRequest"
     @utility.request_ID = "BYSPublicKeyRequest"
-    assert @utility.valid?
+    assert_equal @utility.XSD_path(), "BYSPublicKeyRequest"
   end
   
-  test "reject non-standard requestIDs" do   
-    @utility.request_ID = "Wrong"
-    assert_not @utility.valid?
+  test "generate_path should generate proper ID addresses" do
+    @utility.request_ID = "UnitTypeInfoRequest"
+    assert_equal @utility.generate_path(), "https://54.197.134.112:3400/unittypeinfo"
+    @utility.request_ID = "SiteTypeInfoRequest"
+    assert_equal @utility.generate_path(), "https://54.197.134.112:3400/sitetypeinfo"
+    @utility.request_ID = "NotesAndTermsRequest"
+    assert_equal @utility.generate_path(), "https://54.197.134.112:3400/notesandterms"
+    @utility.request_ID = "BYSPublicKeyRequest"
+    assert_equal @utility.generate_path(), "https://54.197.134.112:3400/byspublickey"
   end
   
-  test "park ID cannot be too short" do
-    @utility.park_ID = "M"
-    assert_not @utility.valid?
+  test "build_XML should generate proper XML" do
+    #puts @utility.build_XML().to_s
   end
-  
-  test "park ID cannot be too long" do  
-    @utility.park_ID = "M123456"
-    assert_not @utility.valid?
-  end
-  
-  test "park ID must start with M" do  
-    @utility.park_ID = "000000"
-    assert_not @utility.valid?
-  end
-  
-  test "park ID must use alphanumeric" do
-    @utility.park_ID = "M#####"
-    assert_not @utility.valid?
-  end
-  
-  test "security key must exist" do
-    @utility.security_key = nil
-    assert_not @utility.valid?
-  end
-  
-  #test "security ket must use alphanumeric" do
-  #  @utility.securityKey = "%"
-  #  assert_not @utility.valid?
-  #end
 end

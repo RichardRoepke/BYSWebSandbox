@@ -1,20 +1,37 @@
-class UtilityValidator
+class UtilityValidator < ServiceValidator
   include ActiveModel::Validations
-
-  attr_accessor :request_ID
-  attr_accessor :park_ID
-  attr_accessor :security_key
-
-  validates :request_ID, inclusion: { in: %w{UnitTypeInfoRequest SiteTypeInfoRequest NotesAndTermsRequest BYSPublicKeyRequest}, message: "Non-valid Service Request ID."}
-  validates :park_ID, length: { is: 6, message: "Camp Ground User Name must be 6 characters"}
-  validates :park_ID, format: { with: /\A^M.*\z/, message: "Camp Ground User Name must start with a M" }
-  validates :park_ID, format: { with: /\A^[a-zA-Z0-9_]*\z/, message: "Camp Ground User Name can only be made out of alphanumeric characters."}
-  validates :security_key, presence: { message: "Security Key is required" }
-  #validates :security_key, format: { with: /\A^[a-zA-Z0-9_]*\z/, message: "Security Key can only be made out of alphanumeric characters."}
   
-  def initialize(form)
-    @request_ID = form[:request_ID].to_s
-    @park_ID = form[:park_ID].to_s
-    @security_key = form[:security_key].to_s
+  def build_XML()    
+    xml = Builder::XmlMarkup.new(:indent=>2)
+    xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
+    xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', "xsi:noNamespaceSchemaLocation"=>'file:/home/bys/Desktop/SHARE/xml2/' + @request_ID.to_s + '/' + XSD_path() + '.xsd')  {
+      xml.tag!("Body") {
+        xml.tag!(@request_ID.to_s.chomp("Request").downcase){
+          xml.tag!("RequestData"){
+            xml.tag!("RequestIdentification"){
+              xml.ServiceRequestID @request_ID.to_s
+              xml.tag!("CampGroundIdentification"){
+                xml.CampGroundUserName @park_ID.to_s
+                xml.CampGroundSecurityKey @security_key.to_s
+              }
+            }
+          }
+        }
+      }
+    }
+  end # - build_utility_XML
+  
+  def XSD_path()
+    if @request_ID == "UnitTypeInfoRequest"
+      return "unitTypeInfoRequest"
+    elsif @request_ID == "SiteTypeInfoRequest"
+      return "siteTypeInfoRequest"
+    else
+      return @request_ID
+    end
   end
-end
+  
+  def generate_path()
+    return "https://54.197.134.112:3400/" + @request_ID.to_s.chomp("Request").downcase
+  end
+end 
