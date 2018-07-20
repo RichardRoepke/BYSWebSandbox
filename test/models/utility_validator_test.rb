@@ -29,8 +29,4 @@ class UtilityValidatorTest < ActiveSupport::TestCase
     @utility.request_ID = "BYSPublicKeyRequest"
     assert_equal @utility.generate_path(), "https://54.197.134.112:3400/byspublickey"
   end
-  
-  test "build_XML should generate proper XML" do
-    #puts @utility.build_XML().to_s
-  end
 end

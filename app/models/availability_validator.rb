@@ -10,9 +10,9 @@ class AvailabilityValidator < ServiceValidator
   attr_accessor :unit_length
   attr_accessor :request_unav
   
-  validates :arrival_date, format: { with: /\A^[0-9\-]*\z/, message: "Arrival Date can only be numbers and dashes."}
+  validates :arrival_date, format: { with: /\A[0-9\-]*\z/, message: "Arrival Date can only be numbers and dashes."}
   validates :arrival_date, format: { with: /\A....\-..\-..\z/, message: "Arrival Date must be in the format of YYYY-MM-DD."}
-  validates :num_nights, format: { with: /\A^[0-9]*[1-9]\z/, message: "Number of Nights must be a number which is greater than 0."}
+  validates :num_nights, format: { with: /\A[0-9]*[1-9]\z/, message: "Number of Nights must be a number which is greater than 0."}
   validates :internal_UID, format: { with: /\A([0-9]*[1-9]){0,1}\z/, message: "Unit Type Internal ID must be empty or a number greater than 0."}
   validates :type_ID, format: { with: /\A^[a-zA-Z0-9_\-\\]*\z/, message: "Unit Type ID can only be alphanumeric characters, dashes, underscores and backslashes."}
   validates :unit_length, format: { with: /\A[0-9]*\z/, message: "Unit Length must be a number."}

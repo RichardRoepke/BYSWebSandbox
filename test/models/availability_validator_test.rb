@@ -104,6 +104,10 @@ class AvailabilityValidatorTest < ActiveSupport::TestCase
     assert_not @validator.valid?
   end
   
+  test "path generation should be as expected" do
+    assert_equal @validator.generate_path(), "https://54.197.134.112:3400/siteavailability"
+  end
+  
   
  end
  
