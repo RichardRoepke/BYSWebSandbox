@@ -22,11 +22,21 @@ class ServicesController < ApplicationController
       @security = params[:availability_form][:security_key].to_s
       @arrival = params[:availability_form][:arrival_date].to_s
       @nights = params[:availability_form][:num_nights].to_s
+      @internal = params[:availability_form][:internal_UID].to_s
+      @type = params[:availability_form][:type_ID].to_s
+      @length = params[:availability_form][:unit_length].to_s
+      
+      @unavailable = false
+      @unavailable = true if params[:availability_form][:request_unav].to_i == 1
     else
       @park = ""
       @security = ""
       @arrival = ""
       @nights = ""
+      @internal = ""
+      @type = ""
+      @length = ""
+      @unavailable = false
     end
     
     resolve_user_action(params[:user_action], params[:availability_form], "AvailabilityRequest") if params[:user_action].present?
@@ -58,13 +68,14 @@ class ServicesController < ApplicationController
           doc.each_element("//Fault"){ |f|
             
             f.each_element("//FaultCode"){ |c|
-              @xml_fault_title = "ERROR (" + c.text + "): "
+              @xml_fault_title = "ERROR (" + c.text + ")"
               
               @xml_fault_help = generate_troubleshooting(c.text)
               }
             
             f.each_element("//FaultMessage") { |m|
-              @xml_fault_title += m.text
+              
+              @xml_fault_title += ": " + m.text if m.has_text?
               }
             }
         else
@@ -72,8 +83,8 @@ class ServicesController < ApplicationController
           if service_response.success?
             @response_fail = "Connection was successful but web services responded with an empty message body. Please verify your inputs and try again."
           else
-            @response_fail = serviceResponse.code.to_s
-            @response_fail += ": " + serviceResponse.return_message unless serviceResponse.return_message == "No error"
+            @response_fail = service_response.code.to_s
+            @response_fail += ": " + service_response.return_message unless serviceResponse.return_message == "No error"
           end
         end
       end
@@ -83,6 +94,8 @@ class ServicesController < ApplicationController
   def generate_path(user_input, service_type)
     if service_type == "UtilityService"
       return "https://54.197.134.112:3400/" + user_input[:request_ID].to_s.chomp("Request").downcase
+    elsif service_type == "AvailabilityRequest"
+      return "https://54.197.134.112:3400/siteavailability"
     end
   end
   
@@ -115,6 +128,8 @@ class ServicesController < ApplicationController
   def build_request_XML(user_input, service_type)
     if service_type == "UtilityService"
       return build_utility_XML(user_input[:request_ID], user_input[:park_ID], user_input[:security_key])
+    elsif service_type == "AvailabilityRequest"
+      return build_availability_XML(user_input)
     else
       return nil
     end
@@ -122,7 +137,7 @@ class ServicesController < ApplicationController
   
   def build_utility_XML(request, park, security)
     xml = Builder::XmlMarkup.new(:indent=>2)
-    xml.instruct! :xml, :version=>"1.0" #:content_type=>"text/xml" #, :encoding=>"UTF-8"
+    xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
     xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', "xsi:noNamespaceSchemaLocation"=>'file:/home/bys/Desktop/SHARE/xml2/' + request + '/' + utility_XSD_path(request) + '.xsd')  {
       xml.tag!("Body") {
         xml.tag!(request.chomp("Request").downcase){
@@ -149,6 +164,35 @@ class ServicesController < ApplicationController
       return request
     end
   end
+  
+  def build_availability_XML(input)
+    xml = Builder::XmlMarkup.new(:indent=>2)
+    xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
+    xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', "xsi:noNamespaceSchemaLocation"=>'/home/bys/Desktop/SHARE/xml2/SiteAvailabilityRequest/siteAvailabilityRequest.xsd')  {
+      xml.tag!("Body") {
+        xml.tag!("siteavailability"){
+          xml.tag!("RequestData"){
+            xml.tag!("RequestIdentification"){
+              xml.ServiceRequestID "SiteAvailabilityRequest"
+              xml.tag!("CampGroundIdentification"){
+                xml.CampGroundUserName input[:park_ID]
+                xml.CampGroundSecurityKey input[:security_key]
+              }
+            }
+            
+            xml.tag!("AvailabilityRequest") {
+              xml.ArrivalDate input[:arrival_date]
+              xml.NumberOfNights input[:num_nights]
+              xml.UnitTypeInternalUID input[:internal_UID] unless input[:internal_UID] == ""
+              xml.UnitType input[:type_ID] unless input[:type_ID] == ""
+              xml.UnitLength input[:unit_length] unless input[:unit_length] == ""
+              xml.RequestUnavailables input[:request_unav]
+            }
+          }
+        }
+      }
+    }
+  end # - build_availability_XML
   
   def generate_troubleshooting(error_code)
     unexpected = "Web services unexpectedly failed to validate your request. Please double-check that all of your inputs are correct."

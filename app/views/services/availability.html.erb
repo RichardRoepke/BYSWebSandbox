@@ -15,10 +15,10 @@
       <%= f.label :num_nights, "Number of Nights" %>
       <%= f.text_field :num_nights, value: @nights %>
       
-      <%= f.label :internal_UID, "Unit Type Internal UID" %>
+      <%= f.label :internal_UID, "Unit Type Internal UID (Leave blank to not include)" %>
       <%= f.text_field :internal_UID, value: @internal %>
       
-      <%= f.label :type_ID, "Unit Type ID" %>
+      <%= f.label :type_ID, "Unit Type ID (Leave blank to not include)" %>
       <%= f.text_field :type_ID, value: @type # Is always overwritten by UID.
        %>
       
@@ -26,7 +26,7 @@
       <%= f.text_field :unit_length, value: @length %>
       
       <%= f.label :request_unav, "Request Unavailable?" %>
-      <%= f.check_box :request_unav, value: @unavailable %>
+      <%= f.check_box :request_unav, checked: @unavailable %>
       
       <hr />
       

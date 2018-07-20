@@ -13,8 +13,14 @@ class AvailabilityValidator < ServiceValidator
   validates :arrival_date, format: { with: /\A^[0-9\-]*\z/, message: "Arrival Date can only be numbers and dashes."}
   validates :arrival_date, format: { with: /\A....\-..\-..\z/, message: "Arrival Date must be in the format of YYYY-MM-DD."}
   validates :num_nights, format: { with: /\A^[0-9]*[1-9]\z/, message: "Number of Nights must be a number which is greater than 0."}
+  validates :internal_UID, format: { with: /\A([0-9]*[1-9]){0,1}\z/, message: "Unit Type Internal ID must be empty or a number greater than 0."}
+  validates :type_ID, format: { with: /\A^[a-zA-Z0-9_\-\\]*\z/, message: "Unit Type ID can only be alphanumeric characters, dashes, underscores and backslashes."}
+  validates :unit_length, format: { with: /\A[0-9]*\z/, message: "Unit Length must be a number."}
+  validates :request_unav, format: { with: /\A(0|1)\z/, message: "Request Unavailable must be 0 or 1."}
   
   validate  :valid_date
+  validate  :UID_or_ID
+  validate  :length_range
   
   def initialize(form)
     @request_ID = "SiteAvailabilityRequest"
@@ -22,6 +28,30 @@ class AvailabilityValidator < ServiceValidator
     @security_key = form[:security_key].to_s
     @arrival_date = form[:arrival_date].to_s
     @num_nights = form[:num_nights].to_s
+    @internal_UID = form[:internal_UID].to_s
+    @type_ID = form[:type_ID].to_s
+    @unit_length = form[:unit_length].to_s
+    @request_unav = form[:request_unav].to_s
+  end
+  
+  def length_range
+    unless @unit_length == ""
+      if @unit_length.to_i < 1 || @unit_length.to_i > 100
+        errors.add(:base, "At least one of Unit Type Internal ID and Unit Type ID must be present.")
+        return false
+      end
+    end
+    
+    return true
+  end
+  
+  def UID_or_ID
+    if @internal_UID == "" && @type_ID == ""
+      errors.add(:base, "At least one of Unit Type Internal ID and Unit Type ID must be present.")
+      return false
+    else
+      return true
+    end
   end
   
   def valid_date

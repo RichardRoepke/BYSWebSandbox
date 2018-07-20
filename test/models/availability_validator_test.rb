@@ -3,11 +3,15 @@ require 'date'
 
 class AvailabilityValidatorTest < ActiveSupport::TestCase
   def setup
-    setup = {request_ID: "UnitTypeInfoRequest",
-             park_ID: "M00000",
-             security_key: "yes",
-             arrival_date: '2100-10-10',
-             num_nights: "5"}
+    setup = { request_ID: "SiteAvailabilityRequest",
+              park_ID: "M00000",
+              security_key: "yes",
+              arrival_date: '2100-10-10',
+              num_nights: "5",
+              internal_UID: "5",
+              type_ID: "CABIN",
+              unit_length: "",
+              request_unav: "0" }
     @validator = AvailabilityValidator.new(setup)
   end
   
@@ -39,6 +43,64 @@ class AvailabilityValidatorTest < ActiveSupport::TestCase
   
   test "number of nights must be a number greater than 0" do
     @validator.num_nights = "-1"
+    assert_not @validator.valid?
+    @validator.num_nights = "0"
+    assert_not @validator.valid?
+  end
+  
+  test "the internal UID must be a number" do
+    @validator.internal_UID = "Two"
+    assert_not @validator.valid?
+  end
+  
+  test "the internal UID can be a number greater than 0" do
+    @validator.internal_UID = "-1"
+    assert_not @validator.valid?
+    @validator.internal_UID = "0"
+    assert_not @validator.valid?
+  end
+  
+  test "the internal UID can be empty" do
+    @validator.internal_UID = ""
+    assert @validator.valid?
+  end
+  
+  test "type ID must be alphanumeric, backslashes, dashes and underscores" do
+    @validator.type_ID = "&&&&&"
+    assert_not @validator.valid?
+  end
+  
+  test "type ID can be empty" do
+    @validator.type_ID = ""
+    assert @validator.valid?
+  end
+  
+  test "at least one of internal UID and type ID must be present" do
+    @validator.internal_UID = ""
+    @validator.type_ID = ""
+    assert_not @validator.valid?
+  end
+  
+  test "unit length must be a number" do
+    @validator.unit_length = "Not a number"
+    assert_not @validator.valid?
+  end
+  
+  test "unit length must be between 1 and 100 if present" do
+    @validator.unit_length = "0"
+    assert_not @validator.valid?
+    @validator.unit_length = "55"
+    assert @validator.valid?
+    @validator.unit_length = "101"
+    assert_not @validator.valid?
+  end
+  
+  test "request unavailable should be 0 or 1" do
+    @validator.request_unav = "1"
+    assert @validator.valid?
+    @validator.request_unav = "0"
+    assert @validator.valid?
+    @validator.request_unav = "5"
     assert_not @validator.valid?
   end
   
