@@ -124,7 +124,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                                                           type_ID: "",
                                                           unit_length: "",
                                                           request_unav: ""} }
-    assert_select "div[class=?]", "errorExplanation", count: 8
+    assert_select "div[class=?]", "errorExplanation", count: 9
   end
 
   test "availability: generate and show proper xml on request" do

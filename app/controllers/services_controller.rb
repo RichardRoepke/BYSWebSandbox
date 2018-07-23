@@ -43,12 +43,10 @@ class ServicesController < ApplicationController
       @length = ""
       @unavailable = false
     end
-    
-    #resolve_user_action(params[:user_action], params[:availability_form], "AvailabilityRequest") if params[:user_action].present?
   end
   
   def handle_user_action(validator, user_action)
-    if validator.valid?
+    if validator.valid? || user_action == "Force Submit"
       validator.resolve_action(user_action)
       @request_errors = validator.output[:request_errors] if validator.output[:request_errors].present?
       @response_fail = validator.output[:response_fail] if validator.output[:response_fail].present?

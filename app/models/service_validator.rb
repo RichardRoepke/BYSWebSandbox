@@ -31,7 +31,7 @@ class ServiceValidator
       if user_action == "Check XML"
         output[:xml_title] = "Service Request"
         output[:xml] = request_XML
-      elsif user_action == "Submit"
+      elsif user_action == "Submit" || user_action == "Force Submit"
         service_response = Typhoeus::Request.post( generate_path(), 
                                            headers: {'Content-Type' => 'text/xml'},
                                            body: request_XML,
@@ -82,6 +82,7 @@ class ServiceValidator
     when "BYSVV02" then "This is likely a web services issue. Please reload the page and try again."
     when "BYSVV03" then "Double check that your Camp Ground User Name is correct and try again."
     when "BYSVV04" then "Double check that your security key and/or login credentials are correct and try again."
+    when "BYSSA05" then unexpected
     when "BYSVV99" then unexpected
     when "BYSUT99" then unexpected
     when "BYSST99" then unexpected
