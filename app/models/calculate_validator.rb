@@ -1,12 +1,9 @@
-class AvailabilityValidator < ServiceValidator
+class CalculateValidator < ServiceValidator
   include ActiveModel::Validations
-  
-  attr_accessor :request_unav
-  
-  validates :request_unav, format: { with: /\A(0|1)\z/, message: "Request Unavailable must be 0 or 1."}
-  
+
   validate  :valid_date
   validate  :valid_unit
+  validate  :valid_billing
   
   def initialize(form)
     @unit = UnitValidator.new( { internal_UID: "", type_ID: "", unit_length: "" } )
@@ -15,13 +12,22 @@ class AvailabilityValidator < ServiceValidator
     @request_ID = "SiteAvailabilityRequest"
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
-    @request_unav = form[:request_unav].to_s
     
     @unit.internal_UID = form[:internal_UID].to_s
     @unit.type_ID = form[:type_ID].to_s
     @unit.length = form[:unit_length].to_s
     @date.arrival_date = form[:arrival_date].to_s
     @date.num_nights = form[:num_nights].to_s
+    
+    @billing_array = []
+    
+    form[:current_bill_num].to_i.times do |n|
+      billing = { item: form[("item" + n.to_s).to_sym], 
+                  type: form[("type" + n.to_s).to_sym],
+                  quantity: form[("quantity" + n.to_s).to_sym] }
+      
+      @billing_array.push(BillingValidator.new(billing))
+    end
     
     @output = Hash.new
   end
@@ -46,6 +52,16 @@ class AvailabilityValidator < ServiceValidator
       end
       return false
     end
+  end
+  
+  def valid_billing
+    result = true
+    
+    @billing_array.each do |bill|
+      result = false unless bill.valid?
+    end
+    
+    return result
   end
   
   def generate_path()

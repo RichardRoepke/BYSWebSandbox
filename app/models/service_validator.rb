@@ -17,9 +17,15 @@ class ServiceValidator
   
   
   def initialize(form)
-    @request_ID = form[:request_ID].to_s
-    @park_ID = form[:park_ID].to_s
-    @security_key = form[:security_key].to_s
+    if form.present?
+      @request_ID = form[:request_ID].to_s
+      @park_ID = form[:park_ID].to_s
+      @security_key = form[:security_key].to_s
+    else
+      @request_ID = ""
+      @park_ID = ""
+      @security_key = ""
+    end
     
     @output = Hash.new
   end

@@ -45,6 +45,38 @@ class ServicesController < ApplicationController
     end
   end
   
+  def calculate
+    if params[:calculate_form]
+      @park = params[:calculate_form][:park_ID].to_s
+      @security = params[:calculate_form][:security_key].to_s
+      @internal = params[:calculate_form][:internal_UID].to_s
+      @type = params[:calculate_form][:type_ID].to_s
+      @arrival = params[:calculate_form][:arrival_date].to_s
+      @nights = params[:calculate_form][:num_nights].to_s
+      
+      if params[:user_action] == "Update"
+        @billing = 1
+        @billing = params[:calculate_form][:bill_num].to_i if params[:calculate_form][:bill_num].to_i > 0
+        update_billing_array
+      else
+        @billing = params[:calculate_form][:current_bill_num].to_i
+        update_billing_array
+      end
+      
+      puts @billing_array.to_s
+    else
+      @park = ""
+      @security = ""
+      @internal = ""
+      @type = ""
+      @arrival = ""
+      @nights = ""
+      @billing = 1
+      @billing_index = [0]
+      @billing_array = [["","",""]]
+    end
+  end
+  
   def handle_user_action(validator, user_action)
     if validator.valid? || user_action == "Force Submit"
       validator.resolve_action(user_action)
@@ -56,6 +88,26 @@ class ServicesController < ApplicationController
       @xml_fault_help = validator.output[:xml_fault_help] if validator.output[:xml_fault_help].present?
     else
       @request_errors = validator.errors
+    end
+  end
+  
+  def update_billing_array ()
+    @billing_index = []
+        @billing_array = []
+        @billing.times do |n|
+          @billing_index.push(n.to_i)
+          temp = string_to_boolean params[:calculate_form][("type" + n.to_s).to_sym]
+          @billing_array.push([params[:calculate_form][("item" + n.to_s).to_sym], 
+                               params[:calculate_form][("quantity" + n.to_s).to_sym], 
+                               temp ])
+        end
+  end
+  
+  def string_to_boolean(string)
+    if string == "1"
+      return true
+    else
+      return false
     end
   end
 end

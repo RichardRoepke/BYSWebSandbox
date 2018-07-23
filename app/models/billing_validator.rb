@@ -12,9 +12,15 @@ class BillingValidator
   validate  :type_quantity_match
   
   def initialize(form)
-    @item = form[:item].to_s
-    @type = form[:type].to_s
-    @quantity = form[:quantity].to_s
+    if form.present?
+      @item = form[:item].to_s
+      @type = form[:type].to_s
+      @quantity = form[:quantity].to_s
+    else 
+      @item = ""
+      @type = ""
+      @quantity = ""
+    end
   end
   
   def type_quantity_match

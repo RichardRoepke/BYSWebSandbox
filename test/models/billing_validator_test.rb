@@ -54,4 +54,11 @@ class BillingValidatorTest < ActiveSupport::TestCase
     @validator.quantity = "1000"
     assert_not @validator.valid?
   end
+  
+  test "can initialize with empty" do
+    @validator = BillingValidator.new({})
+    assert @validator.item = ""
+    assert @validator.type = ""
+    assert @validator.quantity = ""
+  end
 end

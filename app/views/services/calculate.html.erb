@@ -1,0 +1,55 @@
+<% provide(:title, "Rate Calculation") %>
+
+<div class="form">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for :calculate_form, method: :get do |f| %>     
+      <%= f.label :park_ID, "Camp Ground User Name" %>
+      <%= f.text_field :park_ID, value: @park %>
+      
+      <%= f.label :security_key, "Camp Ground Security Key" %>
+      <%= f.text_field :security_key, value: @security %>
+      
+      <%= f.label :internal_UID, "Site Type Internal UID (Leave blank to not include)" %>
+      <%= f.text_field :internal_UID, value: @internal %>
+      
+      <%= f.label :type_ID, "Site Type ID (Leave blank to not include)" %>
+      <%= f.text_field :type_ID, value: @type # Is always overwritten by UID.
+       %>
+      
+      <%= f.label :arrival_date, "Arrival Date" %>
+      <%= f.text_field :arrival_date, value: @arrival %>
+      
+      <%= f.label :num_nights, "Number of Nights" %>
+      <%= f.text_field :num_nights, value: @nights %>
+      
+      <%= f.label :bill_num, "Number of Billing Items"%>
+      <%= f.number_field :bill_num, value: @billing %>
+      <%= f.hidden_field :current_bill_num, value: @billing.to_s %>
+      
+      <%= f.submit "Update", name: "user_action" %>
+      
+      <hr />
+      <pre></pre>
+      
+      <!-- Very messy but associations and fields_for seems to be tied to database models only.
+           If there is a better way to go about dynamically making, destroying and setting
+           collections of values like this I would love to hear it. -->
+      <% @billing_index.each do |index| %>
+        <p><%= "Billing Item #" + (index + 1).to_s %></p>
+        <%= f.label (("item" + index.to_s).to_sym), "Billing Item" %>
+        <%= f.text_field (("item" + index.to_s).to_sym), value: @billing_array[index][0] %>
+           
+        <%= f.label (("quantity" + index.to_s).to_sym), "Billing Quantity" %>
+        <%= f.text_field (("quantity" + index.to_s).to_sym), value: @billing_array[index][1] %>
+        <%= f.label (("type" + index.to_s).to_sym), "Is Boolean? (Leave unchecked for numeric)" %>
+        <%= f.check_box (("type" + index.to_s).to_sym), checked: @billing_array[index][2] %>
+      <% end %>
+            
+      <hr />
+      
+      <%= f.submit "Check XML", name: "user_action" %>
+      <%= f.submit "Submit", name: "user_action" %>
+      <%= f.submit "Force Submit", name: "user_action" %>
+    <% end %>
+  </div>  
+</div>
