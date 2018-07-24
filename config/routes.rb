@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   get  '/availability', to: 'services#availability'
   get  '/calculate', to: 'services#calculate'
   get  '/reservationhold', to: 'services#res_hold'
+  get  '/reservationconfirm', to: 'services#res_confirm'
 end

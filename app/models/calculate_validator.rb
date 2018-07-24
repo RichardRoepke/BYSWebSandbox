@@ -111,5 +111,5 @@ class CalculateValidator < ServiceValidator
         }
       }
     }
-  end # - build_availability_XML
+  end # - build_XML
 end

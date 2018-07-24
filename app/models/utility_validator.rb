@@ -19,7 +19,7 @@ class UtilityValidator < ServiceValidator
         }
       }
     }
-  end # - build_utility_XML
+  end # - build_XML
   
   def XSD_path()
     if @request_ID == "UnitTypeInfoRequest"

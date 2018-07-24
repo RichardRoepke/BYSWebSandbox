@@ -63,6 +63,12 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                                  cc_type: "VISA",
                                  cc_number: "4",
                                  cc_expiry: "99/99" } }
+    @resconfirmform = { request_ID: "ReservationConfirmRequest",
+                        park_ID: "M00000",
+                        security_key: "yes",
+                        reservation_ID: "2",
+                        hold_token: "hold",
+                        action: "Confirm" }
   end
   
   # ===============================================
@@ -428,6 +434,67 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   # ===============================================
   # Reservation Hold Request Tests End
+  # ===============================================
+  
+  # ===============================================
+  # Reservation Confirm Request Tests Start
+  # ===============================================
+  test "reservation confirm: should be setup properly" do
+    get reservationconfirm_path
+    assert_response :success
+    assert_select "title", "BYS Web Sandbox: Reservation Confirm Request"
+  end
+  
+
+  # availability_validator handles the validation of values, so if this test
+  # has a different error count that section should fail as well.
+  test "reservation confirm: check for improper values" do
+    get reservationconfirm_path
+    assert_response :success
+    get reservationconfirm_path, params: { user_action: "Check XML",
+                                           res_confirm_form: { request_ID: "ReservationConfirmRequest",
+                                                               park_ID: "",
+                                                               security_key: "",
+                                                               reservation_ID: "",
+                                                               hold_token: "",
+                                                               action: "" } }
+    assert_select "div[class=?]", "errorExplanation", count: 6
+  end
+
+  test "reservation confirm: generate and show proper xml on request" do
+    get reservationconfirm_path
+    assert_response :success
+    get reservationconfirm_path, params: { user_action: "Check XML",
+                                           res_confirm_form: @resconfirmform }
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation", count: 0
+  end
+   
+  test "reservation confirm: generate and show proper xml on submit" do
+    # Once a way to test confirmations without setting stuff is found,
+    # these tests will be revised.
+    #get reservationconfirm_path
+    #assert_response :success
+    #get reservationconfirm_path, params: { user_action: "Submit",
+    #                                 res_confirm_form: @resholdform }
+    #assert_select "div[class=?]", "formatXML"
+  end
+  
+  test "reservation confirm: error on requesting park not in database" do
+    # Once a way to test confirmations without setting stuff is found,
+    # these tests will be revised.
+    
+    #get reservationconfirm_path
+    #assert_response :success
+    
+    #@resholdform[:park_ID] = "MC0000"
+    #get reservationconfirm_path, params: { user_action: "Submit",
+    #                                 res_confirm_form: @resholdform }
+    #assert_select "div[class=?]", "formatXML"
+    #assert_select "div[class=?]", "errorExplanation"
+  end
+  # ===============================================
+  # Reservation Confirm Request Tests End
   # ===============================================
 
 end

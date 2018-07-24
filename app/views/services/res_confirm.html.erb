@@ -1,0 +1,28 @@
+<% provide(:title, "Reservation Confirm Request") %>
+
+<div class="form">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for :res_confirm_form, method: :get do |f| %>      
+      <%= f.label :park_ID, "Camp Ground User Name" %>
+      <%= f.text_field :park_ID, value: @set[:park_ID] %>
+      
+      <%= f.label :security_key, "Camp Ground Security Key" %>
+      <%= f.text_field :security_key, value: @set[:security_key] %>
+      
+      <%= f.label :reservation_ID, "Reservation Request ID" %>
+      <%= f.text_field :reservation_ID, value: @set[:reservation_ID] %>
+      
+      <%= f.label :hold_token, "Reservation Hold Token" %>
+      <%= f.text_field :hold_token, value: @set[:hold_token] %>
+      
+      <%= f.label :action, "Action" %>
+      <%= f.text_field :action, value: @set[:action] %>
+            
+      <hr />
+      
+      <%= f.submit "Check XML", name: "user_action" %>
+      <%= f.submit "Submit", name: "user_action" %>
+      <%= f.submit "Force Submit", name: "user_action" %>
+    <% end %>
+  </div>  
+</div>

@@ -180,7 +180,7 @@ class ResHoldValidator < CalculateValidator
         }
       }
     }
-  end # - build_availability_XML
+  end # - build_XML
   
   def no_site_choice?
     result = true

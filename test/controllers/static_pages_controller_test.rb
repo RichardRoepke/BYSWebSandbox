@@ -13,6 +13,7 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", availability_path, count: 2
     assert_select "a[href=?]", calculate_path, count: 2
     assert_select "a[href=?]", reservationhold_path, count: 2
+    assert_select "a[href=?]", reservationconfirm_path, count: 2
   end
 
 end

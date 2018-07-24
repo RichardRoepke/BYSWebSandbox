@@ -89,9 +89,7 @@ class ServicesController < ApplicationController
       @discount_text = params[:res_hold_form][:discount_text].to_s
       
       @cust = params[:res_hold_form][:customer]
-      # puts "YO:" + @cust[:terms_accept].to_s
       @cust[:terms_accept] = string_to_boolean @cust[:terms_accept]
-      # puts "YO:" + @cust[:terms_accept].to_s
 
       if params[:user_action] == "Update"
         @billing = 1
@@ -113,6 +111,17 @@ class ServicesController < ApplicationController
       @billing_index = ["0"]
       @billing_array = [["","",""]]
       @cust = { }
+    end
+  end
+  
+  def res_confirm
+    if params[:res_confirm_form]
+      @set = params[:res_confirm_form]
+      validator = ResConfirmValidator.new(params[:res_confirm_form])
+      
+      handle_user_action(validator, params[:user_action]) if params[:user_action].present?
+    else
+      @set = {}
     end
   end
   
