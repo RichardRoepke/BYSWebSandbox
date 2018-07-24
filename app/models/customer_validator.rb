@@ -25,7 +25,7 @@ class CustomerValidator
   validates :address_one, presence: { message: "Address Line One is required."} 
   validates :city, presence: { message: "City is required." }
   validates :state_province, presence: { message: "State or Province is required." }
-  validates :cc_number, presence: { message: "Credit Card Number is required." }
+  validates :cc_number, presence: { message: "Credit Card Encrypted Number is required." }
   # Might be a good idea to implement validation later on down the line.
   
   validates :phone, format: { with: /\A[0-9\-]*\z/, message: "Phone Number can only be numbers and dashes." }

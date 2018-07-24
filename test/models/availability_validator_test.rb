@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'date'
 
 class AvailabilityValidatorTest < ActiveSupport::TestCase
   def setup
@@ -31,7 +30,5 @@ class AvailabilityValidatorTest < ActiveSupport::TestCase
   test "path generation should be as expected" do
     assert_equal @validator.generate_path(), "https://54.197.134.112:3400/siteavailability"
   end
-  
-  
  end
  

@@ -24,6 +24,9 @@
       
       <%= f.label :bill_num, "Number of Billing Items"%>
       <%= f.number_field :bill_num, value: @billing %>
+      
+      <!-- Ensures that all billing info is retained when the user doesn't submit
+           an update action. -->
       <%= f.hidden_field :current_bill_num, value: @billing.to_s %>
       
       <%= f.submit "Update", name: "user_action" %>
@@ -35,14 +38,15 @@
            If there is a better way to go about dynamically making, destroying and setting
            collections of values like this I would love to hear it. -->
       <% @billing_index.each do |index| %>
-        <p><%= "Billing Item #" + (index + 1).to_s %></p>
-        <%= f.label (("item" + index.to_s).to_sym), "Billing Item" %>
-        <%= f.text_field (("item" + index.to_s).to_sym), value: @billing_array[index][0] %>
+        <p><%= "Billing Item #" + (index.to_i + 1).to_s %></p>
+        <%= f.label ("item" + index), "Billing Item" %>
+        <%= f.text_field ("item" + index), name: ("calculate_form[" + index + "][item]"), value: @billing_array[index.to_i][0] %>
            
-        <%= f.label (("quantity" + index.to_s).to_sym), "Billing Quantity" %>
-        <%= f.text_field (("quantity" + index.to_s).to_sym), value: @billing_array[index][1] %>
-        <%= f.label (("type" + index.to_s).to_sym), "Is Boolean? (Leave unchecked for numeric)" %>
-        <%= f.check_box (("type" + index.to_s).to_sym), checked: @billing_array[index][2] %>
+        <%= f.label ("quantity" + index), "Billing Quantity" %>
+        <%= f.text_field ("quantity" + index), name: ("calculate_form[" + index + "][quantity]"), value: @billing_array[index.to_i][1] %>
+        
+        <%= f.label ("type" + index), "Is Boolean? (Leave unchecked for numeric)" %>
+        <%= f.check_box ("type" + index), name: ("calculate_form[" + index + "][type]"), checked: @billing_array[index.to_i][2] %>
       <% end %>
             
       <hr />

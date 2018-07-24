@@ -4,16 +4,15 @@ require 'date'
 class CalculateValidatorTest < ActiveSupport::TestCase
   def setup
     @init = { request_ID: "RateCalculationRequest",
-              park_ID: "M00000",
+              park_ID: "MCU108",
               security_key: "yes",
-              arrival_date: '2100-10-10',
-              num_nights: "5",
-              internal_UID: "5",
-              type_ID: "CABIN",
-              current_bill_num: 3,
-              item0: "Adults", quantity0: "5", type0: "0",
-              item1: "Children", quantity1: "2", type1: "0",
-              item2: "Cable TV", quantity2: "1", type2: "1" }
+              arrival_date: '2018-08-18',
+              num_nights: "8",
+              internal_UID: "59",
+              type_ID: "",
+              current_bill_num: 2,
+              "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
+              "1".to_sym => { item: "Children:", quantity: "2", type: "0" } }
                
     @validator = CalculateValidator.new(@init)
   end
@@ -31,15 +30,11 @@ class CalculateValidatorTest < ActiveSupport::TestCase
     @validator = CalculateValidator.new(@init)
     assert @validator.valid?
     
-    @init[:current_bill_num] = 4
-    @init[:item3] = "Pets"
-    @init[:quantity3] = "0"
-    @init[:type3] = "1"
-    
+    @init[:current_bill_num] = 3
+    @init["2".to_sym] = { item: "Pets", quantity: "0", type: "1" }
     @validator = CalculateValidator.new(@init)
     assert @validator.valid?
   end
-  
   
  end
  

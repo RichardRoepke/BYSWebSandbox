@@ -1,21 +1,146 @@
-<% provide(:title, "Reservation Hold Service") %>
+<% provide(:title, "Reservation Hold Request") %>
 
 <div class="form">
   <div class="col-md-6 col-md-offset-3">
-    <%= form_for :utility_form, method: :get do |f| %>
-      <%= f.label :request_ID, "Service Requests ID" %>
-      <% requestoptions = options_for_select([
-        ["Unit Type Information Request", "UnitTypeInfoRequest"],
-        ["Site Type Information Request", "SiteTypeInfoRequest"],
-        ["Notes and Terms Request", "NotesAndTermsRequest"],
-        ["BYS Public Key Request", "BYSPublicKeyRequest"]], @request)%>
-      <%= f.select(:request_ID, requestoptions) %>
-      
+    <%= form_for :res_hold_form, method: :get do |f| %>     
       <%= f.label :park_ID, "Camp Ground User Name" %>
       <%= f.text_field :park_ID, value: @park %>
       
       <%= f.label :security_key, "Camp Ground Security Key" %>
       <%= f.text_field :security_key, value: @security %>
+      
+      <%= f.label :reservation_ID, "Reservation Request ID" %>
+      <%= f.text_field :reservation_ID, value: @reservation_ID %>
+      
+      <%= f.label :site_internal_UID, "Site Type Internal UID (Leave blank to not include)" %>
+      <%= f.text_field :site_internal_UID, name: "res_hold_form[site][internal_UID]", value: @site_internal %>
+      
+      <%= f.label :site_type_ID, "Site Type ID (Leave blank to not include)" %>
+      <%= f.text_field :site_type_ID, name: "res_hold_form[site][type_ID]", value: @site_type # Is always overwritten by UID.
+       %>
+       
+       <%= f.label :unit_internal_UID, "Unit Type Internal UID (Leave blank to not include)" %>
+      <%= f.text_field :unit_internal_UID, name: "res_hold_form[unit][internal_UID]", value: @unit_internal %>
+      
+      <%= f.label :unit_type_ID, "Unit Type ID (Leave blank to not include)" %>
+      <%= f.text_field :unit_type_ID, name: "res_hold_form[unit][type_ID]", value: @unit_type # Is always overwritten by UID.
+       %>
+      
+      <%= f.label :unit_length, "Unit Length (Leave blank to not include)" %>
+      <%= f.text_field :unit_length, name: "res_hold_form[unit][length]", value: @unit_length %>
+      
+      <%= f.label :arrival_date, "Arrival Date" %>
+      <%= f.text_field :arrival_date, name: "res_hold_form[date][arrival_date]", value: @arrival %>
+      
+      <%= f.label :num_nights, "Number of Nights" %>
+      <%= f.text_field :num_nights, name: "res_hold_form[date][num_nights]", value: @nights %>
+      <hr />
+      <h3>Customer Information:</h3>
+      
+      <%= f.label :first_name, "First Name" %>
+      <%= f.text_field :first_name, name: "res_hold_form[customer][first_name]", value: @cust[:first_name] %>
+      
+      <%= f.label :last_name, "Last Name" %>
+      <%= f.text_field :last_name, name: "res_hold_form[customer][last_name]", value: @cust[:last_name] %>
+      
+      <%= f.label :email, "Email" %>
+      <%= f.text_field :email, name: "res_hold_form[customer][email]", value: @cust[:email] %>
+      
+      <%= f.label :phone, "Primary Phone" %>
+      <%= f.text_field :phone, name: "res_hold_form[customer][phone]", value: @cust[:phone] %>
+      
+      <%= f.label :phone_alt, "Alternate Phone" %>
+      <%= f.text_field :phone_alt, name: "res_hold_form[customer][phone_alt]", value: @cust[:phone_alt] %>
+      
+      <%= f.label :address_one, "Address One" %>
+      <%= f.text_field :address_one, name: "res_hold_form[customer][address_one]", value: @cust[:address_one] %>
+      
+      <%= f.label :address_two, "Address Two" %>
+      <%= f.text_field :address_two, name: "res_hold_form[customer][address_two]", value: @cust[:address_two] %>
+      
+      <%= f.label :city, "City" %>
+      <%= f.text_field :city, name: "res_hold_form[customer][city]", value: @cust[:city] %>
+      
+      <%= f.label :state_province, "State or Province" %>
+      <%= f.text_field :state_province, name: "res_hold_form[customer][state_province]", value: @cust[:state_province] %>
+      
+      <%= f.label :postal_code, "ZIP or Postal Code" %>
+      <%= f.text_field :postal_code, name: "res_hold_form[customer][postal_code]", value: @cust[:postal_code] %>
+      
+      <%= f.label :note, "Note to Park (Leave blank to not include)" %>
+      <%= f.text_area :note, name: "res_hold_form[customer][note]", value: @cust[:note] %>
+      
+      <%= f.label :terms_accept, "Accept the Terms and Conditions?" %>
+      <%= f.check_box :terms_accept, name: "res_hold_form[customer][terms_accept]", checked: @cust[:terms_accept] %>
+      
+      <hr />
+      
+      <%= f.label :rate_ID, "Rate Calculation ID" %>
+      <%= f.text_field :rate_ID, value: @rate_ID %>
+      
+      <%= f.label :member_UUID, "Member UUID (Leave blank to not include)" %>
+      <%= f.text_field :member_UUID, value: @member_UUID %>
+      
+      <%= f.label :site1, "First Site Selection Name (Leave blank to not include)" %>
+      <%= f.text_field :site1, name: "res_hold_form[site_choice][site1]", value: @site1 %>
+      
+      <%= f.label :site2, "Second Site Selection Name (Leave blank to not include)" %>
+      <%= f.text_field :site2, name: "res_hold_form[site_choice][site2]", value: @site2 %>
+      
+      <%= f.label :site3, "Third Site Selection Name (Leave blank to not include)" %>
+      <%= f.text_field :site3, name: "res_hold_form[site_choice][site3]", value: @site3 %>
+      
+      <%= f.label :loyalty_code, "Loyalty Code (Leave blank to not include)" %>
+      <%= f.text_field :loyalty_code, value: @loyalty_code %>
+      
+      <%= f.label :loyalty_text, "Loyalty Text (Leave blank to not include)" %>
+      <%= f.text_field :loyalty_text, value: @loyalty_text %>
+      
+      <%= f.label :discount_code, "Discount Code (Leave blank to not include)" %>
+      <%= f.text_field :discount_code, value: @discount_code %>
+      
+      <%= f.label :discount_text, "Discount Text (Leave blank to not include)" %>
+      <%= f.text_field :discount_text, value: @discount_text %>
+          
+      <hr />        
+      <%= f.label :bill_num, "Number of Billing Items"%>
+      <%= f.number_field :bill_num, value: @billing %>
+      
+      <!-- Ensures that all billing info is retained when the user doesn't submit
+           an update action. -->
+      <%= f.hidden_field :current_bill_num, value: @billing.to_s %>
+      
+      <%= f.submit "Update", name: "user_action" %>
+      
+      <hr />
+      <pre></pre>
+      
+      <!-- Very messy but associations and fields_for seems to be tied to database models only.
+           If there is a better way to go about dynamically making, destroying and setting
+           collections of values like this I would love to hear it. -->
+      <% @billing_index.each do |index| %>
+        <p><%= "Billing Item #" + (index.to_i + 1).to_s %></p>
+        <%= f.label ("item" + index), "Billing Item" %>
+        <%= f.text_field ("item" + index), name: ("res_hold_form[" + index + "][item]"), value: @billing_array[index.to_i][0] %>
+           
+        <%= f.label ("quantity" + index), "Billing Quantity" %>
+        <%= f.text_field ("quantity" + index), name: ("res_hold_form[" + index + "][quantity]"), value: @billing_array[index.to_i][1] %>
+        
+        <%= f.label ("type" + index), "Is Boolean? (Leave unchecked for numeric)" %>
+        <%= f.check_box ("type" + index), name: ("res_hold_form[" + index + "][type]"), checked: @billing_array[index.to_i][2] %>
+      <% end %>
+      
+      <hr />
+      <h3>Credit Card Information:</h3>
+      
+      <%= f.label :cc_type, "Credit Card Brand:" %>
+      <%= f.text_field :cc_type, name: "res_hold_form[customer][cc_type]", value: @cust[:cc_type] %>
+      
+      <%= f.label :cc_expiry, "Credit Card Expiry:" %>
+      <%= f.text_field :cc_expiry, name: "res_hold_form[customer][cc_expiry]", value: @cust[:cc_expiry] %>
+      
+      <%= f.label :cc_number, "Credit Card Encrypted Number:" %>
+      <%= f.text_field :cc_number, name: "res_hold_form[customer][cc_number]", value: @cust[:cc_number] %>
       
       <hr />
       

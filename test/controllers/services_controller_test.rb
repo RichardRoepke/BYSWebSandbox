@@ -21,17 +21,48 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                           request_unav: "0"}
                           
     @calculateform = { request_ID: "RateCalculationRequest",
-                       park_ID: "M00000",
+                       park_ID: "MCU108",
                        security_key: "yes",
-                       arrival_date: '2100-10-10',
-                       num_nights: "5",
-                       internal_UID: "5",
-                       type_ID: "CABIN",
-                       bill_num: 3,
-                       current_bill_num: 3,
-                       item0: "Adults", quantity0: "5", type0: "0",
-                       item1: "Children", quantity1: "2", type1: "0",
-                       item2: "Cable TV", quantity2: "1", type2: "1" }
+                       arrival_date: '2018-08-18',
+                       num_nights: "8",
+                       internal_UID: "59",
+                       type_ID: "",
+                       current_bill_num: 2,
+                       "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
+                       "1".to_sym => { item: "Children:", quantity: "2", type: "0" } }
+                       
+    @resholdform = { request_ID: "ReservationHoldRequest",
+                     park_ID: "MCU108",
+                     security_key: "yes",
+                     reservation_ID: "UNIQUE",
+                     rate_ID: "sure",
+                     member_UUID: "7",
+                     site_choice: { a: "C2", b: "", c: ""},
+                     loyalty_code: "",
+                     loyalty_text: "",
+                     discount_code: "",
+                     discount_text: "",
+                     date: { arrival_date: '2018-08-18', num_nights: "3"},
+                     site: { internal_UID: "59", type_ID: "" },
+                     unit: { internal_UID: "47", type_ID: "", length: "" },
+                     current_bill_num: 2,
+                     "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
+                     "1".to_sym => { item: "Children:", quantity: "2", type: "0" },
+                     customer: { first_name: "Bobby",
+                                 last_name: "Bob",
+                                 email: "Bob@Bob.com",
+                                 phone: "555-555-5555",
+                                 phone_alt: "555-555-5555",
+                                 address_one: "555 Bob street",
+                                 address_two: "",
+                                 city: "Bob Town",
+                                 state_province: "Boblandia",
+                                 postal_code: "L5L5L5",
+                                 note: "No notes.",
+                                 terms_accept: "1",
+                                 cc_type: "VISA",
+                                 cc_number: "4",
+                                 cc_expiry: "99/99" } }
   end
   
   # ===============================================
@@ -233,7 +264,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     get calculate_path, params: { user_action: "Submit",
                                   calculate_form: @calculateform }
     # Figure this out when I get a proper example. 
-    #assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "formatXML"
   end
   
   test "calculation: error on requesting park not in database" do
@@ -244,8 +275,8 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     get calculate_path, params: { user_action: "Submit",
                                   calculate_form: @calculateform }
     # Figure this out when I get a proper example.
-    # assert_select "div[class=?]", "formatXML"
-    # assert_select "div[class=?]", "errorExplanation"
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation"
   end
   
   test "calculation: extend and reduce billing numbers on update" do
@@ -271,10 +302,132 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     get calculate_path, params: { user_action: "CheckXML",
                                   calculate_form: @calculateform }
     assert_select "input[id=?]", "calculate_form_quantity1"
+    
+    @calculateform[:bill_num] = "1"
+    @calculateform[:current_bill_num] = "3"
+    get calculate_path, params: { user_action: "CheckXML",
+                                  calculate_form: @calculateform }
+    assert_select "input[id=?]", "calculate_form_quantity1"
     assert_select "input[id=?]", "calculate_form_quantity2"
   end
   # ===============================================
   # Rate Calcuation Request Tests End
+  # ===============================================
+  
+  # ===============================================
+  # Reservation Hold Request Tests Start
+  # ===============================================
+  test "reservation hold should be setup properly" do
+    get reservationhold_path
+    assert_response :success
+    assert_select "title", "BYS Web Sandbox: Reservation Hold Request"
+  end
+  
+
+  # calculation_validator handles the validation of values, so if this test
+  # has a different error count that section should fail as well.
+  test "reservation hold: check for improper values" do
+    get reservationhold_path
+    assert_response :success
+    get reservationhold_path, params: { user_action: "Check XML",
+                                        res_hold_form: { request_ID: "",
+                                                         park_ID: "",
+                                                         security_key: "",
+                                                         reservation_ID: "",
+                                                         rate_ID: "",
+                                                         member_UUID: "",
+                                                         site_choice: { a: "", b: "", c: ""},
+                                                         loyalty_code: "",
+                                                         loyalty_text: "",
+                                                         discount_code: "",
+                                                         discount_text: "",
+                                                         date: { arrival_date: '', num_nights: ""},
+                                                         site: { internal_UID: "", type_ID: "" },
+                                                         unit: { internal_UID: "", type_ID: "", length: "" },
+                                                         current_bill_num: 2,
+                                                         "0".to_sym => { item: "", quantity: "", type: "0" },
+                                                         "1".to_sym => { item: "", quantity: "", type: "0" },
+                                                         customer: { first_name: "",
+                                                                     last_name: "",
+                                                                     email: "",
+                                                                     phone: "",
+                                                                     phone_alt: "",
+                                                                     address_one: "",
+                                                                     address_two: "",
+                                                                     city: "",
+                                                                     state_province: "",
+                                                                     postal_code: "",
+                                                                     note: "",
+                                                                     terms_accept: "",
+                                                                     cc_type: "",
+                                                                     cc_number: "",
+                                                                     cc_expiry: "" } } }
+    assert_select "div[class=?]", "errorExplanation", count: 26
+  end
+
+  test "reservation hold: generate and show proper xml on request" do
+    get reservationhold_path
+    assert_response :success
+    get reservationhold_path, params: { user_action: "Check XML",
+                                        res_hold_form: @resholdform }
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation", count: 0
+  end
+   
+  test "reservation hold: generate and show proper xml on submit" do
+    get reservationhold_path
+    assert_response :success
+    get reservationhold_path, params: { user_action: "Submit",
+                                        res_hold_form: @resholdform }
+    # Figure this out when I get a proper example. 
+    assert_select "div[class=?]", "formatXML"
+  end
+  
+  test "reservation hold: error on requesting park not in database" do
+    get reservationhold_path
+    assert_response :success
+    
+    @resholdform[:park_ID] = "MC0000"
+    get reservationhold_path, params: { user_action: "Submit",
+                                        res_hold_form: @resholdform }
+    # Figure this out when I get a proper example.
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation"
+  end
+  
+  test "reservation hold: extend and reduce billing numbers on update" do
+    get reservationhold_path
+    assert_response :success
+    
+    @resholdform[:bill_num] = "2"
+    get reservationhold_path, params: { user_action: "Update",
+                                        res_hold_form: @resholdform }
+    assert_select "input[id=res_hold_form_item2]", false
+    assert_select "input[id=res_hold_form_quantity2]", false
+    assert_select "input[id=res_hold_form_type2]", false
+    
+    @resholdform[:bill_num] = "4"
+    get reservationhold_path, params: { user_action: "Update",
+                                        res_hold_form: @resholdform }
+    assert_select "input[id=?]", "res_hold_form_quantity2"
+    assert_select "input[id=?]", "res_hold_form_item3"
+    assert_select "input[id=?]", "res_hold_form_quantity3"
+    assert_select "input[id=?]", "res_hold_form_type3" 
+    
+    @resholdform[:bill_num] = "1"
+    get reservationhold_path, params: { user_action: "CheckXML",
+                                        res_hold_form: @resholdform }
+    assert_select "input[id=?]", "res_hold_form_quantity1"
+    
+    @resholdform[:bill_num] = "1"
+    @resholdform[:current_bill_num] = "3"
+    get reservationhold_path, params: { user_action: "CheckXML",
+                                        res_hold_form: @resholdform }
+    assert_select "input[id=?]", "res_hold_form_quantity1"
+    assert_select "input[id=?]", "res_hold_form_quantity2"
+  end
+  # ===============================================
+  # Reservation Hold Request Tests End
   # ===============================================
 
 end

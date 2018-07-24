@@ -21,11 +21,7 @@ class CalculateValidator < ServiceValidator
     @billing_array = []
     
     form[:current_bill_num].to_i.times do |n|
-      billing = { item: form[("item" + n.to_s).to_sym], 
-                  type: form[("type" + n.to_s).to_sym],
-                  quantity: form[("quantity" + n.to_s).to_sym] }
-
-      @billing_array.push(BillingValidator.new(billing))
+      @billing_array.push(BillingValidator.new(form[n.to_s.to_sym]))
     end
     
     @output = Hash.new
