@@ -25,7 +25,7 @@ class BillingValidator
   
   def type_quantity_match
     if @type == "0"
-      if @quantity.to_i >= 0
+      if @quantity.to_i >= 0 && @quantity != ""
         return true
       else
         errors.add(:base, "Billing Quantity must be 0 or greater if Billing Type is numeric.")

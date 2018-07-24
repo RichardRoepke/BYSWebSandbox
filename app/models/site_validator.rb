@@ -30,7 +30,7 @@ class SiteValidator
   
   def UID_or_ID
     if @internal_UID == "" && @type_ID == ""
-      errors.add(:base, "At least one of Internal UID or ID must be present.")
+      errors.add(:base, "Internal UID or ID or both must be present.")
       return false
     else
       return true

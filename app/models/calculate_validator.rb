@@ -2,20 +2,19 @@ class CalculateValidator < ServiceValidator
   include ActiveModel::Validations
 
   validate  :valid_date
-  validate  :valid_unit
+  validate  :valid_site
   validate  :valid_billing
   
   def initialize(form)
-    @unit = UnitValidator.new( { internal_UID: "", type_ID: "", unit_length: "" } )
+    @site = SiteValidator.new( { internal_UID: "", type_ID: "" } )
     @date = DateValidator.new( { arrival_date: "", num_nights: "" } )
     
     @request_ID = "SiteAvailabilityRequest"
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
     
-    @unit.internal_UID = form[:internal_UID].to_s
-    @unit.type_ID = form[:type_ID].to_s
-    @unit.length = form[:unit_length].to_s
+    @site.internal_UID = form[:internal_UID].to_s
+    @site.type_ID = form[:type_ID].to_s
     @date.arrival_date = form[:arrival_date].to_s
     @date.num_nights = form[:num_nights].to_s
     
@@ -25,19 +24,19 @@ class CalculateValidator < ServiceValidator
       billing = { item: form[("item" + n.to_s).to_sym], 
                   type: form[("type" + n.to_s).to_sym],
                   quantity: form[("quantity" + n.to_s).to_sym] }
-      
+
       @billing_array.push(BillingValidator.new(billing))
     end
     
     @output = Hash.new
   end
   
-  def valid_unit
-    if @unit.valid?
+  def valid_site
+    if @site.valid?
       return true
     else
-      @unit.errors.each do |type, message|
-        errors.add(:base, "Unit " + message)
+      @site.errors.each do |type, message|
+        errors.add(:base, "Site " + message)
       end
       return false
     end
@@ -56,46 +55,61 @@ class CalculateValidator < ServiceValidator
   
   def valid_billing
     result = true
+    num = 1
     
     @billing_array.each do |bill|
-      result = false unless bill.valid?
+      unless bill.valid?
+        result = false
+        bill.errors.each do |type, message|
+          errors.add(:base, "Billing Item " + num.to_s + ": " + message)
+        end
+      end
+      
+      num += 1
     end
     
     return result
   end
   
   def generate_path()
-    return "https://54.197.134.112:3400/siteavailability"
+    return "https://54.197.134.112:3400/ratecalculation"
   end
   
   def build_XML()
-    @internal_UID = @unit.internal_UID.to_s
-    @type_ID = @unit.type_ID.to_s
-    @unit_length = @unit.length.to_s
+    @internal_UID = @site.internal_UID.to_s
+    @type_ID = @site.type_ID.to_s
     @arrival_date = @date.arrival_date.to_s
     @num_nights = @date.num_nights.to_s
     
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
-    xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', "xsi:noNamespaceSchemaLocation"=>'/home/bys/Desktop/SHARE/xml2/SiteAvailabilityRequest/siteAvailabilityRequest.xsd')  {
+    xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', 
+                         "xsi:noNamespaceSchemaLocation"=>'/home/bys/Desktop/SHARE/xml2/RateCalculationRequest/rateCalculationRequest.xsd')  {
       xml.tag!("Body") {
-        xml.tag!("siteavailability"){
+        xml.tag!("ratecalculation"){
           xml.tag!("RequestData"){
             xml.tag!("RequestIdentification"){
-              xml.ServiceRequestID "SiteAvailabilityRequest"
+              xml.ServiceRequestID "RateCalculationRequest"
               xml.tag!("CampGroundIdentification"){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key
               }
             }
             
-            xml.tag!("AvailabilityRequest") {
+            xml.tag!("RateCalculationRequest") {
+              xml.SiteTypeInternalUID @internal_UID unless @internal_UID == ""
+              xml.SiteType @type_ID unless @type_ID == ""
               xml.ArrivalDate @arrival_date
               xml.NumberOfNights @num_nights
-              xml.UnitTypeInternalUID @internal_UID unless @internal_UID == ""
-              xml.UnitType @type_ID unless @type_ID == ""
-              xml.UnitLength @unit_length unless @unit_length == ""
-              xml.RequestUnavailables @request_unav
+              xml.tag!("BillingDetails"){
+                @billing_array.each do |bill|
+                  xml.tag!("BillingDetail"){
+                    xml.BillingItem bill.item.to_s
+                    xml.BillingItemType bill.type.to_s
+                    xml.BillingQty bill.quantity.to_s
+                  }
+                end
+              }
             }
           }
         }

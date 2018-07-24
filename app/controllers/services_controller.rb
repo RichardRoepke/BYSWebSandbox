@@ -61,9 +61,11 @@ class ServicesController < ApplicationController
       else
         @billing = params[:calculate_form][:current_bill_num].to_i
         update_billing_array
+        
+        validator = CalculateValidator.new(params[:calculate_form])
+        
+        handle_user_action(validator, params[:user_action])
       end
-      
-      puts @billing_array.to_s
     else
       @park = ""
       @security = ""

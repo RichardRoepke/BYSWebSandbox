@@ -10,6 +10,9 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "title", "#{@title}: Main"
     assert_select "a[href=?]", utility_path, count: 2
+    assert_select "a[href=?]", availability_path, count: 2
+    assert_select "a[href=?]", calculate_path, count: 2
+    assert_select "a[href=?]", reservationhold_path, count: 2
   end
 
 end

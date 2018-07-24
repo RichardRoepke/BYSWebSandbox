@@ -43,6 +43,8 @@ class BillingValidatorTest < ActiveSupport::TestCase
     assert @validator.valid?
     @validator.quantity = "1000"
     assert @validator.valid?
+    @validator.quantity = ""
+    assert_not @validator.valid?
     
     @validator.type = "1"
     @validator.quantity = "-10"
