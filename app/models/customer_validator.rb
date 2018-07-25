@@ -52,9 +52,11 @@ class CustomerValidator
     @state_province = form[:state_province].to_s
     @postal_code = form[:postal_code].to_s
     @note = form[:note].to_s
-    @terms_accept = form[:terms_accept].to_s
     @cc_type = form[:cc_type].to_s
     @cc_number = form[:cc_number].to_s
     @cc_expiry = form[:cc_expiry].to_s
+    
+    @terms_accept = "0"
+    @terms_accept = "1" if form[:terms_accept]
   end
 end

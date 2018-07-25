@@ -4,23 +4,23 @@
   <div class="col-md-6 col-md-offset-3">
     <%= form_for :calculate_form, method: :get do |f| %>     
       <%= f.label :park_ID, "Camp Ground User Name" %>
-      <%= f.text_field :park_ID, value: @park %>
+      <%= f.text_field :park_ID, value: @set[:park_ID] %>
       
       <%= f.label :security_key, "Camp Ground Security Key" %>
-      <%= f.text_field :security_key, value: @security %>
+      <%= f.text_field :security_key, value: @set[:security_key] %>
       
       <%= f.label :internal_UID, "Site Type Internal UID (Leave blank to not include)" %>
-      <%= f.text_field :internal_UID, value: @internal %>
+      <%= f.text_field :internal_UID, value: @set[:internal_UID] %>
       
       <%= f.label :type_ID, "Site Type ID (Leave blank to not include)" %>
-      <%= f.text_field :type_ID, value: @type # Is always overwritten by UID.
+      <%= f.text_field :type_ID, value: @set[:type_ID] # Is always overwritten by UID.
        %>
       
       <%= f.label :arrival_date, "Arrival Date" %>
-      <%= f.text_field :arrival_date, value: @arrival %>
+      <%= f.text_field :arrival_date, value: @set[:arrival_date] %>
       
       <%= f.label :num_nights, "Number of Nights" %>
-      <%= f.text_field :num_nights, value: @nights %>
+      <%= f.text_field :num_nights, value: @set[:num_nights] %>
       
       <%= f.label :bill_num, "Number of Billing Items"%>
       <%= f.number_field :bill_num, value: @billing %>

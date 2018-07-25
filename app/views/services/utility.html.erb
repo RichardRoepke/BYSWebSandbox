@@ -8,14 +8,14 @@
         ["Unit Type Information Request", "UnitTypeInfoRequest"],
         ["Site Type Information Request", "SiteTypeInfoRequest"],
         ["Notes and Terms Request", "NotesAndTermsRequest"],
-        ["BYS Public Key Request", "BYSPublicKeyRequest"]], @request)%>
+        ["BYS Public Key Request", "BYSPublicKeyRequest"]], @set[:request_ID])%>
       <%= f.select(:request_ID, requestoptions) %>
       
       <%= f.label :park_ID, "Camp Ground User Name" %>
-      <%= f.text_field :park_ID, value: @park %>
+      <%= f.text_field :park_ID, value: @set[:park_ID] %>
       
       <%= f.label :security_key, "Camp Ground Security Key" %>
-      <%= f.text_field :security_key, value: @security %>
+      <%= f.text_field :security_key, value: @set[:security_key] %>
       
       <hr />
       
