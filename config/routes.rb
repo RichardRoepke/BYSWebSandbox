@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   get  '/calculate', to: 'services#calculate'
   get  '/reservationhold', to: 'services#res_hold'
   get  '/reservationconfirm', to: 'services#res_confirm'
+  get  '/siteusage', to: 'services#site_usage'
 end

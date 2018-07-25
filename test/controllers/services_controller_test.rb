@@ -69,6 +69,16 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                         reservation_ID: "2",
                         hold_token: "hold",
                         action: "Confirm" }
+    @siteusageform = { request_ID: "SiteUsageHoldRequest",
+                       park_ID: "MCU108",
+                       security_key: "yes",
+                       usage_ID: "here",
+                       date: { arrival_date: '2018-08-18', num_nights: "8"},
+                       site: { internal_UID: "59", type_ID: ""},
+                       unit: { internal_UID: "47", type_ID: "", length: "5" },
+                       site_choice: { site1: {internal_UID: "5", type_ID: "" },
+                                      site2: {internal_UID: "", type_ID: "1" },
+                                      site3: {internal_UID: "", type_ID: "" } } }
   end
   
   # ===============================================
@@ -96,8 +106,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   # utility_validator_test handles the validation of values, so if this test
   # has a different error count that section should fail as well.
   test "utility: check for improper values" do
-    get utility_path
-    assert_response :success
     get utility_path, params: { user_action: "Check XML",
                                 utility_form: { request_ID: "",
                                                 park_ID: "",
@@ -106,8 +114,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   
   test "utility: generate and show proper xml on request" do
-    get utility_path
-    assert_response :success
     get utility_path, params: { user_action: "Check XML",
                                 utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
@@ -115,8 +121,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   
   test "utility: generate and show proper xml on submit" do
-    get utility_path
-    assert_response :success
     get utility_path, params: { user_action: "Submit",
                                 utility_form: @utilityform }
     assert_select "div[class=?]", "formatXML"
@@ -124,9 +128,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   
   test "utility: error on requesting park not in database" do
-    get utility_path
-    assert_response :success
-    
     @utilityform[:park_ID] = "MC0000"
     get utility_path, params: { user_action: "Submit",
                                 utility_form: @utilityform }
@@ -165,8 +166,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   # availability_validator handles the validation of values, so if this test
   # has a different error count that section should fail as well.
   test "availability: check for improper values" do
-    get availability_path
-    assert_response :success
     get availability_path, params: { user_action: "Check XML",
                                      availability_form: { park_ID: "",
                                                           security_key: "",
@@ -180,8 +179,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "availability: generate and show proper xml on request" do
-    get availability_path
-    assert_response :success
     get availability_path, params: { user_action: "Check XML",
                                      availability_form: @availabilityform }
     assert_select "div[class=?]", "formatXML"
@@ -189,17 +186,12 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
    
   test "availability: generate and show proper xml on submit" do
-    get availability_path
-    assert_response :success
     get availability_path, params: { user_action: "Submit",
                                      availability_form: @availabilityform }
     assert_select "div[class=?]", "formatXML"
   end
   
   test "availability: error on requesting park not in database" do
-    get availability_path
-    assert_response :success
-    
     @availabilityform[:park_ID] = "MC0000"
     get availability_path, params: { user_action: "Submit",
                                      availability_form: @availabilityform }
@@ -241,8 +233,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   # calculation_validator handles the validation of values, so if this test
   # has a different error count that section should fail as well.
   test "calculation: check for improper values" do
-    get calculate_path
-    assert_response :success
     get calculate_path, params: { user_action: "Check XML",
                                      calculate_form: { park_ID: "",
                                                        security_key: "",
@@ -256,8 +246,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "calculation: generate and show proper xml on request" do
-    get calculate_path
-    assert_response :success
     get calculate_path, params: { user_action: "Check XML",
                                   calculate_form: @calculateform }
     assert_select "div[class=?]", "formatXML"
@@ -265,8 +253,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
    
   test "calculation: generate and show proper xml on submit" do
-    get calculate_path
-    assert_response :success
     get calculate_path, params: { user_action: "Submit",
                                   calculate_form: @calculateform }
     # Figure this out when I get a proper example. 
@@ -274,9 +260,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   
   test "calculation: error on requesting park not in database" do
-    get calculate_path
-    assert_response :success
-    
     @calculateform[:park_ID] = "MC0000"
     get calculate_path, params: { user_action: "Submit",
                                   calculate_form: @calculateform }
@@ -285,10 +268,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_select "div[class=?]", "errorExplanation"
   end
   
-  test "calculation: extend and reduce billing numbers on update" do
-    get calculate_path
-    assert_response :success
-    
+  test "calculation: extend and reduce billing numbers on update" do    
     @calculateform[:bill_num] = "2"
     get calculate_path, params: { user_action: "Update",
                                   calculate_form: @calculateform }
@@ -333,8 +313,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   # calculation_validator handles the validation of values, so if this test
   # has a different error count that section should fail as well.
   test "reservation hold: check for improper values" do
-    get reservationhold_path
-    assert_response :success
     get reservationhold_path, params: { user_action: "Check XML",
                                         res_hold_form: { request_ID: "",
                                                          park_ID: "",
@@ -372,8 +350,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "reservation hold: generate and show proper xml on request" do
-    get reservationhold_path
-    assert_response :success
     get reservationhold_path, params: { user_action: "Check XML",
                                         res_hold_form: @resholdform }
     assert_select "div[class=?]", "formatXML"
@@ -381,8 +357,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
    
   test "reservation hold: generate and show proper xml on submit" do
-    get reservationhold_path
-    assert_response :success
     get reservationhold_path, params: { user_action: "Submit",
                                         res_hold_form: @resholdform }
     # Figure this out when I get a proper example. 
@@ -390,9 +364,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   
   test "reservation hold: error on requesting park not in database" do
-    get reservationhold_path
-    assert_response :success
-    
     @resholdform[:park_ID] = "MC0000"
     get reservationhold_path, params: { user_action: "Submit",
                                         res_hold_form: @resholdform }
@@ -401,10 +372,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_select "div[class=?]", "errorExplanation"
   end
   
-  test "reservation hold: extend and reduce billing numbers on update" do
-    get reservationhold_path
-    assert_response :success
-    
+  test "reservation hold: extend and reduce billing numbers on update" do    
     @resholdform[:bill_num] = "2"
     get reservationhold_path, params: { user_action: "Update",
                                         res_hold_form: @resholdform }
@@ -449,8 +417,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   # availability_validator handles the validation of values, so if this test
   # has a different error count that section should fail as well.
   test "reservation confirm: check for improper values" do
-    get reservationconfirm_path
-    assert_response :success
     get reservationconfirm_path, params: { user_action: "Check XML",
                                            res_confirm_form: { request_ID: "ReservationConfirmRequest",
                                                                park_ID: "",
@@ -462,8 +428,6 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "reservation confirm: generate and show proper xml on request" do
-    get reservationconfirm_path
-    assert_response :success
     get reservationconfirm_path, params: { user_action: "Check XML",
                                            res_confirm_form: @resconfirmform }
     assert_select "div[class=?]", "formatXML"
@@ -495,6 +459,59 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   # ===============================================
   # Reservation Confirm Request Tests End
+  # ===============================================
+  
+  # ===============================================
+  # Site Usage Hold Request Tests Start
+  # ===============================================
+  test "site usage: should be setup properly" do
+    get siteusage_path
+    assert_response :success
+    assert_select "title", "BYS Web Sandbox: Site Usage Hold Request"
+  end
+  
+
+  # availability_validator handles the validation of values, so if this test
+  # has a different error count that section should fail as well.
+  test "site usage: check for improper values" do
+    get siteusage_path, params: { user_action: "Check XML",
+                                  site_usage_form: { request_ID: "",
+                                                     park_ID: "",
+                                                     security_key: "",
+                                                     usage_ID: "",
+                                                     date: { arrival_date: '', num_nights: ""},
+                                                     site: { internal_UID: "", type_ID: ""},
+                                                     unit: { internal_UID: "", type_ID: "", length: "" },
+                                                     site_choice: { site1: {internal_UID: "test", type_ID: "" },
+                                                                    site2: {internal_UID: "test", type_ID: "" },
+                                                                    site3: {internal_UID: "test", type_ID: "" } } } }
+    assert_select "div[class=?]", "errorExplanation", count: 16
+  end
+
+  test "site usage: generate and show proper xml on request" do
+    get siteusage_path, params: { user_action: "Check XML",
+                                  site_usage_form: @siteusageform }
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation", count: 0
+  end
+   
+  test "site usage: generate and show proper xml on submit" do
+    # Will be reactivated when I figure out a proper submission for site usage
+    
+    #get siteusage_path, params: { user_action: "Submit",
+    #                              site_usage_form: @resholdform }
+    #assert_select "div[class=?]", "formatXML"
+  end
+  
+  test "site usage: error on requesting park not in database" do
+    @siteusageform[:park_ID] = "MC0000"
+    get siteusage_path, params: { user_action: "Submit",
+                                  site_usage_form: @siteusageform }
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation"
+  end
+  # ===============================================
+  # Site Usage Hold Request Tests End
   # ===============================================
 
 end

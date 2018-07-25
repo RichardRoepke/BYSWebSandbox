@@ -91,6 +91,18 @@ class ServicesController < ApplicationController
     end
   end
   
+  def site_usage
+    if params[:site_usage_form]
+      @set = params[:site_usage_form]
+      validator = SiteUsageValidator.new(params[:site_usage_form])
+      
+      handle_user_action(validator, params[:user_action]) if params[:user_action].present?
+    else
+      @set = { date: {}, unit: {}, site: {},
+               site_choice: { site1: {}, site2: {}, site3: {} } }
+    end
+  end
+  
   def handle_user_action(validator, user_action)
     if validator.valid? || user_action == "Force Submit"
       validator.resolve_action(user_action)
