@@ -1,0 +1,101 @@
+<% provide(:title, "Reservation Create Request") %>
+
+<div class="form">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for :res_create_form, method: :get do |f| %>     
+      <%= f.label :park_ID, "Camp Ground User Name" %>
+      <%= f.text_field :park_ID, value: @set[:park_ID] %>
+      
+      <%= f.label :security_key, "Camp Ground Security Key" %>
+      <%= f.text_field :security_key, value: @set[:security_key] %>
+      
+      <%= f.label :usage_token, "Site Usage Hold Token" %>
+      <%= f.text_field :usage_token, value: @set[:usage_token] %>
+      
+      <hr />
+      <h3>Customer Information:</h3>
+      
+      <%= f.label :first_name, "First Name" %>
+      <%= f.text_field :first_name, name: "res_create_form[customer][first_name]", value: @cust[:first_name] %>
+      
+      <%= f.label :last_name, "Last Name" %>
+      <%= f.text_field :last_name, name: "res_create_form[customer][last_name]", value: @cust[:last_name] %>
+      
+      <%= f.label :email, "Email" %>
+      <%= f.text_field :email, name: "res_create_form[customer][email]", value: @cust[:email] %>
+      
+      <%= f.label :phone, "Primary Phone" %>
+      <%= f.text_field :phone, name: "res_create_form[customer][phone]", value: @cust[:phone] %>
+      
+      <%= f.label :phone_alt, "Alternate Phone" %>
+      <%= f.text_field :phone_alt, name: "res_create_form[customer][phone_alt]", value: @cust[:phone_alt] %>
+      
+      <%= f.label :address_one, "Address One" %>
+      <%= f.text_field :address_one, name: "res_create_form[customer][address_one]", value: @cust[:address_one] %>
+      
+      <%= f.label :address_two, "Address Two" %>
+      <%= f.text_field :address_two, name: "res_create_form[customer][address_two]", value: @cust[:address_two] %>
+      
+      <%= f.label :city, "City" %>
+      <%= f.text_field :city, name: "res_create_form[customer][city]", value: @cust[:city] %>
+      
+      <%= f.label :state_province, "State or Province" %>
+      <%= f.text_field :state_province, name: "res_create_form[customer][state_province]", value: @cust[:state_province] %>
+      
+      <%= f.label :postal_code, "ZIP or Postal Code" %>
+      <%= f.text_field :postal_code, name: "res_create_form[customer][postal_code]", value: @cust[:postal_code] %>
+      
+      <%= f.label :note, "Note to Park (Leave blank to not include)" %>
+      <%= f.text_area :note, name: "res_create_form[customer][note]", value: @cust[:note] %>
+      
+      <%= f.label :terms_accept, "Accept the Terms and Conditions?" %>
+      <%= f.check_box :terms_accept, name: "res_create_form[customer][terms_accept]", checked: @cust[:terms_accept] %>
+          
+      <hr />        
+      <%= f.label :bill_num, "Number of Billing Items"%>
+      <%= f.number_field :bill_num, value: @billing %>
+      
+      <!-- Ensures that all billing info is retained when the user doesn't submit
+           an update action. -->
+      <%= f.hidden_field :current_bill_num, name: "res_create_form[billing][current_bill_num]", value: @billing.to_s %>
+      
+      <%= f.submit "Update", name: "user_action" %>
+      
+      <hr />
+      <pre></pre>
+      
+      <!-- Very messy but associations and fields_for seems to be tied to database models only.
+           If there is a better way to go about dynamically making, destroying and setting
+           collections of values like this I would love to hear it. -->
+      <% @billing_index.each do |index| %>
+        <p><%= "Billing Item #" + (index.to_i + 1).to_s %></p>
+        <%= f.label ("item" + index), "Billing Item" %>
+        <%= f.text_field ("item" + index), name: ("res_create_form[billing][" + index + "][item]"), value: @billing_array[index.to_i][0] %>
+           
+        <%= f.label ("quantity" + index), "Billing Quantity" %>
+        <%= f.text_field ("quantity" + index), name: ("res_create_form[billing][" + index + "][quantity]"), value: @billing_array[index.to_i][1] %>
+        
+        <%= f.label ("type" + index), "Is Boolean? (Leave unchecked for numeric)" %>
+        <%= f.check_box ("type" + index), name: ("res_create_form[billing][" + index + "][type]"), checked: @billing_array[index.to_i][2] %>
+      <% end %>
+      
+      <hr />
+      <h3>Credit Card Information:</h3>
+      
+      <%= f.label :cc_type, "Credit Card Type:" %>
+      <%= f.text_field :cc_type, name: "res_create_form[customer][cc_type]", value: @cust[:cc_type] %>
+      
+      <%= f.label :cc_expiry, "Credit Card Expiry:" %>
+      <%= f.text_field :cc_expiry, name: "res_create_form[customer][cc_expiry]", value: @cust[:cc_expiry] %>
+      
+      <%= f.label :cc_number, "Credit Card Encrypted Number:" %>
+      <%= f.text_field :cc_number, name: "res_create_form[customer][cc_number]", value: @cust[:cc_number] %>
+      
+      <hr />
+      
+      <%= f.submit "Check XML", name: "user_action" %>
+      <%= f.submit "Submit", name: "user_action" %>
+      <%= f.submit "Force Submit", name: "user_action" %>
+    <% end %>
+  </div>  
+</div>

@@ -1,6 +1,5 @@
 class UtilityValidator < ServiceValidator
-  include ActiveModel::Validations
-  
+    
   def build_XML()    
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
@@ -19,7 +18,7 @@ class UtilityValidator < ServiceValidator
         }
       }
     }
-  end # - build_utility_XML
+  end # - build_XML
   
   def XSD_path()
     if @request_ID == "UnitTypeInfoRequest"

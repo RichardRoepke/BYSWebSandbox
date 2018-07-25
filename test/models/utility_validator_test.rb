@@ -3,8 +3,8 @@ require 'test_helper'
 class UtilityValidatorTest < ActiveSupport::TestCase
   def setup
     form = {request_ID: "UnitTypeInfoRequest",
-             park_ID: "M00000",
-             security_key: "yes"}
+            park_ID: "M00000",
+            security_key: "yes"}
     @utility = UtilityValidator.new(form)
   end
   
@@ -28,9 +28,5 @@ class UtilityValidatorTest < ActiveSupport::TestCase
     assert_equal @utility.generate_path(), "https://54.197.134.112:3400/notesandterms"
     @utility.request_ID = "BYSPublicKeyRequest"
     assert_equal @utility.generate_path(), "https://54.197.134.112:3400/byspublickey"
-  end
-  
-  test "build_XML should generate proper XML" do
-    #puts @utility.build_XML().to_s
   end
 end

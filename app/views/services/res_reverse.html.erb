@@ -1,21 +1,16 @@
-<% provide(:title, "Utility Services") %>
+<% provide(:title, "Reservation Reversal Request") %>
 
 <div class="form">
   <div class="col-md-6 col-md-offset-3">
-    <%= form_for :utility_form, method: :get do |f| %>
-      <%= f.label :request_ID, "Service Requests ID" %>
-      <% requestoptions = options_for_select([
-        ["Unit Type Information Request", "UnitTypeInfoRequest"],
-        ["Site Type Information Request", "SiteTypeInfoRequest"],
-        ["Notes and Terms Request", "NotesAndTermsRequest"],
-        ["BYS Public Key Request", "BYSPublicKeyRequest"]], @set[:request_ID])%>
-      <%= f.select(:request_ID, requestoptions) %>
-      
+    <%= form_for :res_reverse_form, method: :get do |f| %>     
       <%= f.label :park_ID, "Camp Ground User Name" %>
       <%= f.text_field :park_ID, value: @set[:park_ID] %>
       
       <%= f.label :security_key, "Camp Ground Security Key" %>
       <%= f.text_field :security_key, value: @set[:security_key] %>
+      
+      <%= f.label :res_token, "Reservation Hold Hold Token" %>
+      <%= f.text_field :res_token, value: @set[:res_token] %>
       
       <hr />
       
