@@ -16,6 +16,7 @@ class ResHoldValidator < CalculateValidator
 
   validate  :valid_unit
   validate  :valid_customer
+  validate  :valid_billing
   validate  :loyalty_program
   validate  :discount
   
@@ -24,6 +25,7 @@ class ResHoldValidator < CalculateValidator
     @unit = UnitValidator.new( form[:unit] )
     @date = DateValidator.new( form[:date] )
     @customer = CustomerValidator.new( form[:customer] )
+    @billing = BillingArrayValidator.new( form[:billing] )
     
     @request_ID = "ReservationHoldRequest"
     @park_ID = form[:park_ID].to_s
@@ -36,12 +38,6 @@ class ResHoldValidator < CalculateValidator
     @loyalty_text = form[:loyalty_text].to_s
     @discount_code = form[:discount_code].to_s
     @discount_text = form[:discount_text].to_s
-    
-    @billing_array = []
-    
-    form[:current_bill_num].to_i.times do |n|
-      @billing_array.push(BillingValidator.new(form[n.to_s.to_sym]))
-    end
     
     @output = Hash.new
   end
@@ -63,6 +59,17 @@ class ResHoldValidator < CalculateValidator
     else
       @unit.errors.each do |type, message|
         errors.add(:base, "Unit " + message)
+      end
+      return false
+    end
+  end
+  
+  def valid_billing
+    if @billing.valid?
+      return true
+    else
+      @billing.errors.each do |type, message|
+        errors.add(:base, message)
       end
       return false
     end
@@ -156,7 +163,7 @@ class ResHoldValidator < CalculateValidator
               } unless @loyalty_text == "" # We already know that the code matches so no need to check both. 
               
               xml.tag!("BillingDetails"){
-                @billing_array.each do |bill|
+                @billing.billing_array.each do |bill|
                   xml.tag!("BillingDetail"){
                     xml.BillingItem bill.item.to_s
                     xml.BillingItemType bill.type.to_s

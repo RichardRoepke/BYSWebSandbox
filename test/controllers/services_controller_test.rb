@@ -27,9 +27,9 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                        num_nights: "8",
                        internal_UID: "59",
                        type_ID: "",
-                       current_bill_num: 2,
-                       "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
-                       "1".to_sym => { item: "Children:", quantity: "2", type: "0" } }
+                       billing: { current_bill_num: 2,
+                                  "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
+                                  "1".to_sym => { item: "Children:", quantity: "2", type: "0" } } }
                        
     @resholdform = { request_ID: "ReservationHoldRequest",
                      park_ID: "MCU108",
@@ -45,9 +45,9 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                      date: { arrival_date: '2018-08-18', num_nights: "3"},
                      site: { internal_UID: "59", type_ID: "" },
                      unit: { internal_UID: "47", type_ID: "", length: "" },
-                     current_bill_num: 2,
-                     "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
-                     "1".to_sym => { item: "Children:", quantity: "2", type: "0" },
+                     billing: { current_bill_num: 2,
+                                "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
+                                "1".to_sym => { item: "Children:", quantity: "2", type: "0" } },
                      customer: { first_name: "Bobby",
                                  last_name: "Bob",
                                  email: "Bob@Bob.com",
@@ -63,12 +63,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                                  cc_type: "VISA",
                                  cc_number: "4",
                                  cc_expiry: "99/99" } }
+                                 
     @resconfirmform = { request_ID: "ReservationConfirmRequest",
                         park_ID: "M00000",
                         security_key: "yes",
                         reservation_ID: "2",
                         hold_token: "hold",
                         action: "Confirm" }
+                        
     @siteusageform = { request_ID: "SiteUsageHoldRequest",
                        park_ID: "MCU108",
                        security_key: "yes",
@@ -240,8 +242,8 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                                                        num_nights: "",
                                                        internal_UID: "",
                                                        type_ID: "",
-                                                       current_bill_num: 1,
-                                                       item0: "", quantity0: "", type0: "0"} }
+                                                       billing: { current_bill_num: 1,
+                                                                  item0: "", quantity0: "", type0: "0"} } }
     assert_select "div[class=?]", "errorExplanation", count: 10
   end
 
@@ -290,7 +292,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[id=?]", "calculate_form_quantity1"
     
     @calculateform[:bill_num] = "1"
-    @calculateform[:current_bill_num] = "3"
+    @calculateform[:billing][:current_bill_num] = "3"
     get calculate_path, params: { user_action: "CheckXML",
                                   calculate_form: @calculateform }
     assert_select "input[id=?]", "calculate_form_quantity1"
@@ -328,9 +330,9 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                                                          date: { arrival_date: '', num_nights: ""},
                                                          site: { internal_UID: "", type_ID: "" },
                                                          unit: { internal_UID: "", type_ID: "", length: "" },
-                                                         current_bill_num: 2,
-                                                         "0".to_sym => { item: "", quantity: "", type: "0" },
-                                                         "1".to_sym => { item: "", quantity: "", type: "0" },
+                                                         billing: { current_bill_num: 2,
+                                                                    "0".to_sym => { item: "", quantity: "", type: "0" },
+                                                                    "1".to_sym => { item: "", quantity: "", type: "0" } },
                                                          customer: { first_name: "",
                                                                      last_name: "",
                                                                      email: "",
@@ -394,7 +396,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[id=?]", "res_hold_form_quantity1"
     
     @resholdform[:bill_num] = "1"
-    @resholdform[:current_bill_num] = "3"
+    @resholdform[:billing][:current_bill_num] = "3"
     get reservationhold_path, params: { user_action: "CheckXML",
                                         res_hold_form: @resholdform }
     assert_select "input[id=?]", "res_hold_form_quantity1"

@@ -35,10 +35,10 @@ class ServicesController < ApplicationController
       if params[:user_action] == "Update"
         @billing = 1
         @billing = params[:calculate_form][:bill_num].to_i if params[:calculate_form][:bill_num].to_i > 0
-        update_billing_array(params[:calculate_form])
+        update_billing_array(params[:calculate_form][:billing])
       else
-        @billing = params[:calculate_form][:current_bill_num].to_i
-        update_billing_array(params[:calculate_form])
+        @billing = params[:calculate_form][:billing][:current_bill_num].to_i
+        update_billing_array(params[:calculate_form][:billing])
         
         validator = CalculateValidator.new(params[:calculate_form])
         
@@ -62,10 +62,10 @@ class ServicesController < ApplicationController
       if params[:user_action] == "Update"
         @billing = 1
         @billing = params[:res_hold_form][:bill_num].to_i if params[:res_hold_form][:bill_num].to_i > 0
-        update_billing_array(params[:res_hold_form])
+        update_billing_array(params[:res_hold_form][:billing])
       else
-        @billing = params[:res_hold_form][:current_bill_num].to_i
-        update_billing_array(params[:res_hold_form])
+        @billing = params[:res_hold_form][:billing][:current_bill_num].to_i
+        update_billing_array(params[:res_hold_form][:billing])
         
         validator = ResHoldValidator.new(params[:res_hold_form])
         

@@ -16,9 +16,9 @@ class ResHoldValidatorTest < ActiveSupport::TestCase
               date: { arrival_date: '2018-08-18', num_nights: "3"},
               site: { internal_UID: "59", type_ID: "" },
               unit: { internal_UID: "47", type_ID: "", length: "" },
-              current_bill_num: 2,
-              "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
-              "1".to_sym => { item: "Children:", quantity: "2", type: "0" },
+              billing: { current_bill_num: 2,
+                         "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
+                         "1".to_sym => { item: "Children:", quantity: "2", type: "0" } },
               customer: { first_name: "Bobby",
                           last_name: "Bob",
                           email: "Bob@Bob.com",
@@ -97,6 +97,12 @@ class ResHoldValidatorTest < ActiveSupport::TestCase
     
     @validator.member_UUID = "123"
     assert @validator.valid?
+  end
+  
+  test "billing should be validated" do
+    @init[:billing]["1".to_sym] = { item: "", quantity: "56", type: "1" }
+    @validator = ResHoldValidator.new(@init)
+    assert_not @validator.valid?
   end
 
  end

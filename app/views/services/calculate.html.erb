@@ -27,7 +27,7 @@
       
       <!-- Ensures that all billing info is retained when the user doesn't submit
            an update action. -->
-      <%= f.hidden_field :current_bill_num, value: @billing.to_s %>
+      <%= f.hidden_field :current_bill_num, name: "calculate_form[billing][current_bill_num]", value: @billing.to_s %>
       
       <%= f.submit "Update", name: "user_action" %>
       
@@ -40,13 +40,13 @@
       <% @billing_index.each do |index| %>
         <p><%= "Billing Item #" + (index.to_i + 1).to_s %></p>
         <%= f.label ("item" + index), "Billing Item" %>
-        <%= f.text_field ("item" + index), name: ("calculate_form[" + index + "][item]"), value: @billing_array[index.to_i][0] %>
+        <%= f.text_field ("item" + index), name: ("calculate_form[billing][" + index + "][item]"), value: @billing_array[index.to_i][0] %>
            
         <%= f.label ("quantity" + index), "Billing Quantity" %>
-        <%= f.text_field ("quantity" + index), name: ("calculate_form[" + index + "][quantity]"), value: @billing_array[index.to_i][1] %>
+        <%= f.text_field ("quantity" + index), name: ("calculate_form[billing][" + index + "][quantity]"), value: @billing_array[index.to_i][1] %>
         
         <%= f.label ("type" + index), "Is Boolean? (Leave unchecked for numeric)" %>
-        <%= f.check_box ("type" + index), name: ("calculate_form[" + index + "][type]"), checked: @billing_array[index.to_i][2] %>
+        <%= f.check_box ("type" + index), name: ("calculate_form[billing][" + index + "][type]"), checked: @billing_array[index.to_i][2] %>
       <% end %>
             
       <hr />

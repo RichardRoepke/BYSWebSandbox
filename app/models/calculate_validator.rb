@@ -8,6 +8,7 @@ class CalculateValidator < ServiceValidator
   def initialize(form)
     @site = SiteValidator.new( { internal_UID: "", type_ID: "" } )
     @date = DateValidator.new( { arrival_date: "", num_nights: "" } )
+    @billing = BillingArrayValidator.new( form[:billing] )
     
     @request_ID = "SiteAvailabilityRequest"
     @park_ID = form[:park_ID].to_s
@@ -17,12 +18,6 @@ class CalculateValidator < ServiceValidator
     @site.type_ID = form[:type_ID].to_s
     @date.arrival_date = form[:arrival_date].to_s
     @date.num_nights = form[:num_nights].to_s
-    
-    @billing_array = []
-    
-    form[:current_bill_num].to_i.times do |n|
-      @billing_array.push(BillingValidator.new(form[n.to_s.to_sym]))
-    end
     
     @output = Hash.new
   end
@@ -50,21 +45,14 @@ class CalculateValidator < ServiceValidator
   end
   
   def valid_billing
-    result = true
-    num = 1
-    
-    @billing_array.each do |bill|
-      unless bill.valid?
-        result = false
-        bill.errors.each do |type, message|
-          errors.add(:base, "Billing Item " + num.to_s + ": " + message)
-        end
+    if @billing.valid?
+      return true
+    else
+      @billing.errors.each do |type, message|
+        errors.add(:base, message)
       end
-      
-      num += 1
+      return false
     end
-    
-    return result
   end
   
   def generate_path()
@@ -98,7 +86,7 @@ class CalculateValidator < ServiceValidator
               xml.ArrivalDate @arrival_date
               xml.NumberOfNights @num_nights
               xml.tag!("BillingDetails"){
-                @billing_array.each do |bill|
+                @billing.billing_array.each do |bill|
                   xml.tag!("BillingDetail"){
                     xml.BillingItem bill.item.to_s
                     xml.BillingItemType bill.type.to_s
