@@ -48,25 +48,57 @@ class ResCreateValidator < ServiceValidator
   def build_XML()
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
-    xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', "xsi:noNamespaceSchemaLocation"=>'/home/bys/Desktop/SHARE/xml2/SiteAvailabilityRequest/siteAvailabilityRequest.xsd')  {
+    xml.tag!("Envelope", "xmlns:xsi"=>'http://www.w3.org/2001/XMLSchema-instance', 
+                         "xsi:noNamespaceSchemaLocation"=>'/home/bys/Desktop/SHARE/xml2/ReservationCreateRequest/reservationCreateRequest.xsd')  {
       xml.tag!("Body") {
-        xml.tag!("siteavailability"){
+        xml.tag!("reservationcreate"){
           xml.tag!("RequestData"){
             xml.tag!("RequestIdentification"){
-              xml.ServiceRequestID "SiteAvailabilityRequest"
+              xml.ServiceRequestID "ReservationCreateRequest"
               xml.tag!("CampGroundIdentification"){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key
               }
             }
             
-            xml.tag!("AvailabilityRequest") {
-              xml.ArrivalDate @arrival_date
-              xml.NumberOfNights @num_nights
-              xml.UnitTypeInternalUID @internal_UID unless @internal_UID == ""
-              xml.UnitType @type_ID unless @type_ID == ""
-              xml.UnitLength @unit_length unless @unit_length == ""
-              xml.RequestUnavailables @request_unav
+            xml.tag!("ReservationCreateRequest") {
+              xml.SiteUsageHoldToken @usage_token
+              
+              xml.tag!("BillingDetails"){
+                @billing.billing_array.each do |bill|
+                  xml.tag!("BillingDetail"){
+                    xml.BillingItem bill.item.to_s
+                    xml.BillingItemType bill.type.to_s
+                    xml.BillingQty bill.quantity.to_s
+                  }
+                end
+              }
+              
+              xml.FirstName @customer.first_name
+              xml.LastName @customer.last_name
+              xml.Email @customer.email
+              xml.PrimaryPhone @customer.phone
+              
+              if @customer.phone_alt != ""
+                xml.AlternatePhone @customer.phone_alt
+              else
+                xml.AlternatePhone
+              end
+
+              xml.Address1 @customer.address_one
+              xml.Address2 @customer.address_two
+              xml.City @customer.city
+              xml.StateProvince @customer.state_province
+              xml.ZipPostalCode @customer.postal_code
+              
+              xml.tag!("CCInfo") {
+                xml.CCType @customer.cc_type
+                xml.CCExpiry @customer.cc_expiry
+                xml.CC_Enc @customer.cc_number
+              }
+              
+              xml.NoteToPark @customer.note unless @customer.note == ""
+              xml.TermsConditionsAccepted @customer.terms_accept
             }
           }
         }

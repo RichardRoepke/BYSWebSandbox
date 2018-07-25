@@ -181,7 +181,7 @@ class ResHoldValidator < CalculateValidator
                 xml.CCType @customer.cc_type
                 xml.CCExpiry @customer.cc_expiry
                 xml.CC_Enc @customer.cc_number
-              } 
+              }
             }
           }
         }

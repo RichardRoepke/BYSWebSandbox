@@ -40,4 +40,10 @@ class ResCreateValidatorTest < ActiveSupport::TestCase
     @validator = ResCreateValidator.new(@init)
     assert_not @validator.valid?
   end
+  
+  test "billing should be validated" do
+    @init[:billing]["1".to_sym] = { item: "", quantity: "56", type: 1}
+    @validator = ResCreateValidator.new(@init)
+    assert_not @validator.valid?
+  end
 end

@@ -103,6 +103,33 @@ class ServicesController < ApplicationController
     end
   end
   
+  def res_create
+    if params[:res_create_form]
+      @set = params[:res_create_form]
+      @cust = params[:res_create_form][:customer]
+      @cust[:terms_accept] = string_to_boolean @cust[:terms_accept]
+
+      if params[:user_action] == "Update"
+        @billing = 1
+        @billing = params[:res_create_form][:bill_num].to_i if params[:res_create_form][:bill_num].to_i > 0
+        update_billing_array(params[:res_create_form][:billing])
+      else
+        @billing = params[:res_create_form][:billing][:current_bill_num].to_i
+        update_billing_array(params[:res_create_form][:billing])
+        
+        validator = ResCreateValidator.new(params[:res_create_form])
+        
+        handle_user_action(validator, params[:user_action])
+      end
+    else
+      @set = { }
+      @billing = 1
+      @billing_index = ["0"]
+      @billing_array = [["","",""]]
+      @cust = { }
+    end
+  end
+  
   def handle_user_action(validator, user_action)
     if validator.valid? || user_action == "Force Submit"
       validator.resolve_action(user_action)

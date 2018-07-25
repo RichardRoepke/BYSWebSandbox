@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   get  '/reservationhold', to: 'services#res_hold'
   get  '/reservationconfirm', to: 'services#res_confirm'
   get  '/siteusage', to: 'services#site_usage'
+  get  '/reservationcreate', to: 'services#res_create'
 end

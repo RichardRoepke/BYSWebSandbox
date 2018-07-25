@@ -81,6 +81,29 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                        site_choice: { site1: {internal_UID: "5", type_ID: "" },
                                       site2: {internal_UID: "", type_ID: "1" },
                                       site3: {internal_UID: "", type_ID: "" } } }
+                                      
+    @rescreateform = { request_ID: "ReservationCreateRequest",
+                       park_ID: "MCU108",
+                       security_key: "yes",
+                       usage_token: "UNIQUE",
+                       billing: { current_bill_num: 2,
+                                  "0".to_sym => { item: "Adults:", quantity: "1", type: "0" },
+                                  "1".to_sym => { item: "Children:", quantity: "2", type: "0" } },
+                       customer: { first_name: "Bobby",
+                                   last_name: "Bob",
+                                   email: "Bob@Bob.com",
+                                   phone: "555-555-5555",
+                                   phone_alt: "555-555-5555",
+                                   address_one: "555 Bob street",
+                                   address_two: "",
+                                   city: "Bob Town",
+                                   state_province: "Boblandia",
+                                   postal_code: "L5L5L5",
+                                   note: "No notes.",
+                                   terms_accept: "1",
+                                   cc_type: "VISA",
+                                   cc_number: "4",
+                                   cc_expiry: "99/99" } }
   end
   
   # ===============================================
@@ -514,6 +537,100 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   # ===============================================
   # Site Usage Hold Request Tests End
+  # ===============================================
+  
+  # ===============================================
+  # Reservation Create Request Tests Start
+  # ===============================================
+  test "reservation create should be setup properly" do
+    get reservationcreate_path
+    assert_response :success
+    assert_select "title", "BYS Web Sandbox: Reservation Create Request"
+  end
+  
+
+  # calculation_validator handles the validation of values, so if this test
+  # has a different error count that section should fail as well.
+  test "reservation create: check for improper values" do
+    get reservationcreate_path, params: { user_action: "Check XML",
+                                          res_create_form: { request_ID: "",
+                                                             park_ID: "",
+                                                             security_key: "",
+                                                             usage_hold: "",
+                                                             billing: { current_bill_num: 2,
+                                                                        "0".to_sym => { item: "", quantity: "", type: "0" },
+                                                                        "1".to_sym => { item: "", quantity: "", type: "0" } },
+                                                             customer: { first_name: "",
+                                                                         last_name: "",
+                                                                         email: "",
+                                                                         phone: "",
+                                                                         phone_alt: "",
+                                                                         address_one: "",
+                                                                         address_two: "",
+                                                                         city: "",
+                                                                         state_province: "",
+                                                                         postal_code: "",
+                                                                         note: "",
+                                                                         terms_accept: "",
+                                                                         cc_type: "",
+                                                                         cc_number: "",
+                                                                         cc_expiry: "" } } }
+    assert_select "div[class=?]", "errorExplanation", count: 19
+  end
+
+  test "reservation create: generate and show proper xml on request" do
+    get reservationcreate_path, params: { user_action: "Check XML",
+                                          res_create_form: @rescreateform }
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation", count: 0
+  end
+   
+  test "reservation create: generate and show proper xml on submit" do
+    get reservationcreate_path, params: { user_action: "Submit",
+                                          res_create_form: @rescreateform }
+    # Figure this out when I get a proper example. 
+    assert_select "div[class=?]", "formatXML"
+  end
+  
+  test "reservation create: error on requesting park not in database" do
+    @rescreateform[:park_ID] = "MC0000"
+    get reservationcreate_path, params: { user_action: "Submit",
+                                          res_create_form: @rescreateform }
+    # Figure this out when I get a proper example.
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation"
+  end
+  
+  test "reservation create: extend and reduce billing numbers on update" do    
+    @rescreateform[:bill_num] = "2"
+    get reservationcreate_path, params: { user_action: "Update",
+                                          res_create_form: @rescreateform }
+    assert_select "input[id=res_create_form_item2]", false
+    assert_select "input[id=res_create_form_quantity2]", false
+    assert_select "input[id=res_create_form_type2]", false
+    
+    @rescreateform[:bill_num] = "4"
+    get reservationcreate_path, params: { user_action: "Update",
+                                          res_create_form: @rescreateform }
+    assert_select "input[id=?]", "res_create_form_quantity2"
+    assert_select "input[id=?]", "res_create_form_item3"
+    assert_select "input[id=?]", "res_create_form_quantity3"
+    assert_select "input[id=?]", "res_create_form_type3" 
+    
+    @rescreateform[:bill_num] = "1"
+    get reservationcreate_path, params: { user_action: "CheckXML",
+                                          res_create_form: @rescreateform }
+    assert_select "input[id=?]", "res_create_form_quantity1"
+    
+    @rescreateform[:bill_num] = "1"
+    @rescreateform[:billing][:current_bill_num] = "3"
+    get reservationcreate_path, params: { user_action: "CheckXML",
+                                          res_create_form: @rescreateform }
+    assert_select "input[id=?]", "res_create_form_quantity1"
+    assert_select "input[id=?]", "res_create_form_quantity2"
+  end
+  # ===============================================
+  # Reservation Create Request Tests End
   # ===============================================
 
 end
