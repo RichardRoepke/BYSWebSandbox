@@ -50,7 +50,7 @@ class ServicesController < ApplicationController
       @billing_index = ["0"]
       @billing_array = [["","",""]]
     end
-  end
+  end # - calculate
   
   def res_hold
     if params[:res_hold_form]
@@ -78,7 +78,7 @@ class ServicesController < ApplicationController
       @billing_array = [["","",""]]
       @cust = { }
     end
-  end
+  end # - res_hold
   
   def res_confirm
     if params[:res_confirm_form]
@@ -128,13 +128,25 @@ class ServicesController < ApplicationController
       @billing_array = [["","",""]]
       @cust = { }
     end
-  end
+  end # - res_create
   
   def site_cancel
     if params[:site_cancel_form]
       @set = params[:site_cancel_form]
       
       validator = SiteCancelValidator.new(params[:site_cancel_form])
+      
+      handle_user_action(validator, params[:user_action]) if params[:user_action].present?
+    else
+      @set = {}
+    end
+  end
+  
+  def res_reverse
+    if params[:res_reverse_form]
+      @set = params[:res_reverse_form]
+      
+      validator = ResReverseValidator.new(params[:res_reverse_form])
       
       handle_user_action(validator, params[:user_action]) if params[:user_action].present?
     else

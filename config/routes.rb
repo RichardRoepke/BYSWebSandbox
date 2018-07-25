@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   get  '/reservationconfirm', to: 'services#res_confirm'
   get  '/siteusage', to: 'services#site_usage'
   get  '/reservationcreate', to: 'services#res_create'
-  get  'sitecancel', to: 'services#site_cancel'
+  get  '/sitecancel', to: 'services#site_cancel'
+  get  '/reservationreverse', to: 'services#res_reverse'
 end

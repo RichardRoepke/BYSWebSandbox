@@ -109,6 +109,11 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                         park_ID: "M00000",
                         security_key: "yes",
                         usage_token: "Sure" }
+                        
+    @resreverseform = { request_ID: "SiteUsageCancelRequest",
+                        park_ID: "M00000",
+                        security_key: "yes",
+                        res_token: "Sure" }
   end
   
   # ===============================================
@@ -682,6 +687,52 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   # ===============================================
   # Site Usage Cancel Request Tests End
+  # ===============================================
+  
+  # ===============================================
+  # Reservation Reverse Request Tests Start
+  # ===============================================
+  test "reservation reverse: should be setup properly" do
+    get reservationreverse_path
+    assert_response :success
+    assert_select "title", "BYS Web Sandbox: Reservation Reversal Request"
+  end
+  
+
+  # calculation_validator handles the validation of values, so if this test
+  # has a different error count that section should fail as well.
+  test "reservation reverse: check for improper values" do
+    get reservationreverse_path, params: { user_action: "Check XML",
+                                           res_reverse_form: { request_ID: "",
+                                                               park_ID: "",
+                                                               security_key: "",
+                                                               res_token: ""} }
+    assert_select "div[class=?]", "errorExplanation", count: 4
+  end
+
+  test "reservation reverse: generate and show proper xml on request" do
+    get reservationreverse_path, params: { user_action: "Check XML",
+                                           res_reverse_form: @resreverseform }
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation", count: 0
+  end
+   
+  test "reservation reverse: generate and show proper xml on submit" do
+    get reservationreverse_path, params: { user_action: "Submit",
+                                           res_reverse_form: @resreverseform }
+    assert_select "div[class=?]", "formatXML"
+  end
+  
+  test "reservation reverse: error on requesting park not in database" do
+    @resreverseform[:park_ID] = "MC0000"
+    get reservationreverse_path, params: { user_action: "Submit",
+                                           res_reverse_form: @resreverseform }
+    # Figure this out when I get a proper example.
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation"
+  end
+  # ===============================================
+  # Reservation Reverse Request Tests End
   # ===============================================
 
 end
