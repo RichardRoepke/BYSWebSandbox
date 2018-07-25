@@ -130,6 +130,18 @@ class ServicesController < ApplicationController
     end
   end
   
+  def site_cancel
+    if params[:site_cancel_form]
+      @set = params[:site_cancel_form]
+      
+      validator = SiteCancelValidator.new(params[:site_cancel_form])
+      
+      handle_user_action(validator, params[:user_action]) if params[:user_action].present?
+    else
+      @set = {}
+    end
+  end
+  
   def handle_user_action(validator, user_action)
     if validator.valid? || user_action == "Force Submit"
       validator.resolve_action(user_action)

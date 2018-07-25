@@ -1,0 +1,22 @@
+<% provide(:title, "Site Usage Cancel Request") %>
+
+<div class="form">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for :site_cancel_form, method: :get do |f| %>     
+      <%= f.label :park_ID, "Camp Ground User Name" %>
+      <%= f.text_field :park_ID, value: @set[:park_ID] %>
+      
+      <%= f.label :security_key, "Camp Ground Security Key" %>
+      <%= f.text_field :security_key, value: @set[:security_key] %>
+      
+      <%= f.label :usage_token, "Site Usage Hold Token" %>
+      <%= f.text_field :usage_token, value: @set[:usage_token] %>
+      
+      <hr />
+      
+      <%= f.submit "Check XML", name: "user_action" %>
+      <%= f.submit "Submit", name: "user_action" %>
+      <%= f.submit "Force Submit", name: "user_action" %>
+    <% end %>
+  </div>  
+</div>

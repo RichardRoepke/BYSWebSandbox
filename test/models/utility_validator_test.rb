@@ -3,8 +3,8 @@ require 'test_helper'
 class UtilityValidatorTest < ActiveSupport::TestCase
   def setup
     form = {request_ID: "UnitTypeInfoRequest",
-             park_ID: "M00000",
-             security_key: "yes"}
+            park_ID: "M00000",
+            security_key: "yes"}
     @utility = UtilityValidator.new(form)
   end
   

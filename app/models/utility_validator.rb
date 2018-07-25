@@ -1,6 +1,5 @@
 class UtilityValidator < ServiceValidator
-  include ActiveModel::Validations
-  
+    
   def build_XML()    
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'

@@ -104,6 +104,11 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                                    cc_type: "VISA",
                                    cc_number: "4",
                                    cc_expiry: "99/99" } }
+                                   
+    @sitecancelform = { request_ID: "SiteUsageCancelRequest",
+                        park_ID: "M00000",
+                        security_key: "yes",
+                        usage_token: "Sure" }
   end
   
   # ===============================================
@@ -631,6 +636,52 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
   # ===============================================
   # Reservation Create Request Tests End
+  # ===============================================
+  
+  # ===============================================
+  # Site Usage Cancel Request Tests Start
+  # ===============================================
+  test "site cancel should be setup properly" do
+    get sitecancel_path
+    assert_response :success
+    assert_select "title", "BYS Web Sandbox: Site Usage Cancel Request"
+  end
+  
+
+  # calculation_validator handles the validation of values, so if this test
+  # has a different error count that section should fail as well.
+  test "site cancel: check for improper values" do
+    get sitecancel_path, params: { user_action: "Check XML",
+                                   site_cancel_form: { request_ID: "",
+                                                       park_ID: "",
+                                                       security_key: "",
+                                                       usage_token: ""} }
+    assert_select "div[class=?]", "errorExplanation", count: 4
+  end
+
+  test "site cancel: generate and show proper xml on request" do
+    get sitecancel_path, params: { user_action: "Check XML",
+                                   site_cancel_form: @sitecancelform }
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation", count: 0
+  end
+   
+  test "site cancel: generate and show proper xml on submit" do
+    get sitecancel_path, params: { user_action: "Submit",
+                                   site_cancel_form: @sitecancelform }
+    assert_select "div[class=?]", "formatXML"
+  end
+  
+  test "site cancel: error on requesting park not in database" do
+    @sitecancelform[:park_ID] = "MC0000"
+    get sitecancel_path, params: { user_action: "Submit",
+                                   site_cancel_form: @sitecancelform }
+    # Figure this out when I get a proper example.
+    assert_select "div[class=?]", "formatXML"
+    assert_select "div[class=?]", "errorExplanation"
+  end
+  # ===============================================
+  # Site Usage Cancel Request Tests End
   # ===============================================
 
 end
