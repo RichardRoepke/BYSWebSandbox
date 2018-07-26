@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   root 'static_pages#main'
-  get  '/utility',   to: 'services#utility'
+  get  '/service', to: 'static_pages#service'
+  get  '/misc', to: 'static_pages#misc'
+  
+  get  '/utility', to: 'services#utility'
   get  '/availability', to: 'services#availability'
   get  '/calculate', to: 'services#calculate'
   get  '/reservationhold', to: 'services#res_hold'
@@ -9,4 +12,6 @@ Rails.application.routes.draw do
   get  '/reservationcreate', to: 'services#res_create'
   get  '/sitecancel', to: 'services#site_cancel'
   get  '/reservationreverse', to: 'services#res_reverse'
+  
+  get  '/xmlparse', to: 'misc#xml_parse'
 end
