@@ -2,7 +2,7 @@
 
 <div class="form">
   <div class="col-md-6 col-md-offset-3">
-    <%= form_for :utility_form, method: :get do |f| %>
+    <%= form_for :input_form, method: :get do |f| %>
       <%= f.label :request_ID, "Service Requests ID" %>
       <% requestoptions = options_for_select([
         ["Unit Type Information Request", "UnitTypeInfoRequest"],

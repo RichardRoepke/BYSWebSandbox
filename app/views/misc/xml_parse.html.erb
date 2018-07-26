@@ -1,0 +1,30 @@
+<% provide(:title, "XML Parser") %>
+
+<div class="form">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for :input_form, method: :get do |f| %>
+      <%= f.label :request_ID, "Type of Service" %>
+      <% requestoptions = options_for_select([
+        ["Unit Type Information Request", "unittypeinfo"],
+        ["Site Type Information Request", "sitetypeinfo"],
+        ["Notes and Terms Request", "notesandterms"],
+        ["BYS Public Key Request", "byspublickey"],
+        ["Determine Site Availability Request", "siteavailability"],
+        ["Rate Calculation Service", "ratecalculation"],
+        ["Reservation Hold Service", "reservationhold"],
+        ["Reservation Confirm Service", "reservationconfirm"],
+        ["Site Usage Hold Service", "siteusagehold"],
+        ["Reservation Create Service", "reservationcreate"],
+        ["Site Usage Cancellation Service", "siteusagecancel"],
+        ["Reservation Reversal Service", "reservationreverse"]], @set[:request_ID])%>
+      <%= f.select(:request_ID, requestoptions) %>
+      
+      <%= f.label :xml, "XML" %>
+      <%= f.text_area :xml, value: @set[:xml] %>
+      
+      <hr />
+      
+      <%= f.submit "Submit", name: "user_action" %>
+    <% end %>
+  </div>  
+</div>

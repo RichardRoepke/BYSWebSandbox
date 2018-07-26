@@ -1,7 +1,4 @@
-<% provide(:title, "Main") %>
-<h3>Service Requests:</h3>
-<p>Forms to enter data and automatically generate the needed xml requests for web service API.
-  Also allows the requests to be sent to the web service test server to verify their accuracy.</p>
+<% provide(:title, "Service Requests") %>
 <ul>
   <li><%= link_to "Utility Services", utility_path %></li>
   <li><%= link_to "Site Availabilty Request", availability_path %></li>
@@ -12,10 +9,4 @@
   <li><%= link_to "Reservation Create Request", reservationcreate_path %></li>
   <li><%= link_to "Site Usage Cancel Request", sitecancel_path %></li>
   <li><%= link_to "Reservation Reversal Request", reservationreverse_path %></li>
-</ul>
-
-<h3>Miscellaneous</h3>
-<ul>
-  <li><%= link_to "XML Parser", xmlparse_path %>:
-     Parses XML in a text field and allows it to be sent directly to the web services test server.</li>
 </ul>
