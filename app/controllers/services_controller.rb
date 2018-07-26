@@ -39,6 +39,8 @@ class ServicesController < ApplicationController
   end
   
   def page_generation
+    @output = {}
+    
     if params[:input_form]
       @set = params[:input_form]
 
@@ -97,14 +99,9 @@ class ServicesController < ApplicationController
     if validator.present?
       if validator.valid? || user_action == "Force Submit"
         validator.resolve_action(user_action)
-        @request_errors = validator.output[:request_errors] if validator.output[:request_errors].present?
-        @response_fail = validator.output[:response_fail] if validator.output[:response_fail].present?
-        @xml = validator.output[:xml] if validator.output[:xml].present?
-        @xml_title = validator.output[:xml_title] if validator.output[:xml_title].present?
-        @xml_fault_title = validator.output[:xml_fault_title] if validator.output[:xml_fault_title].present?
-        @xml_fault_help = validator.output[:xml_fault_help] if validator.output[:xml_fault_help].present?
+        @output = validator.output
       else
-        @request_errors = validator.errors
+        @output = { request_errors: validator.errors }
       end
     end
   end

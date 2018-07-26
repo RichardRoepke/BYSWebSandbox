@@ -1,14 +1,14 @@
 <hr/>
 
-<h3><%= @xml_title%></h3>
+<h3><%= @output[:xml_title]%></h3>
 
-<% if @xml_fault_title.present? %>
+<% if @output[:xml_fault_title].present? %>
   <div class="errorExplanation">
-    <h3><%= @xml_fault_title %></h3>
-    <%= @xml_fault_help if @xml_fault_help.present? %>
+    <h3><%= @output[:xml_fault_title] %></h3>
+    <%= @output[:xml_fault_help] if @output[:xml_fault_help].present? %>
   </div>
 <% end %>
 
 <div class="formatXML">
-  <pre><%= @xml %></pre>
+  <pre><%= @output[:xml] %></pre>
 </div>
