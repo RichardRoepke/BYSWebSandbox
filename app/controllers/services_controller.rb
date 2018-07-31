@@ -5,42 +5,42 @@ class ServicesController < ApplicationController
   def utility
     page_generation
   end
-  
+
   def availability
     page_generation
   end
-  
+
   def calculate
     page_generation
   end
-  
+
   def res_hold
     page_generation
   end
-  
+
   def res_confirm
     page_generation
   end
-  
+
   def site_usage
     page_generation
   end
-  
+
   def res_create
     page_generation
   end
-  
+
   def site_cancel
     page_generation
   end
-  
+
   def res_reverse
     page_generation
   end
-  
+
   def page_generation
     @output = {}
-    
+
     if params[:input_form]
       @set = params[:input_form]
 
@@ -79,7 +79,7 @@ class ServicesController < ApplicationController
       @cust = { }
     end
   end # - page_generation
-  
+
   def generate_validator(inputs)
     case params[:action]
     when "availability" then AvailabilityValidator.new(inputs)
@@ -90,11 +90,11 @@ class ServicesController < ApplicationController
     when "res_reverse" then ResReverseValidator.new(inputs)
     when "site_cancel" then SiteCancelValidator.new(inputs)
     when "site_usage" then SiteUsageValidator.new(inputs)
-    when "utility" then UtilityValidator.new(inputs)  
+    when "utility" then UtilityValidator.new(inputs)
     else nil
     end
   end
-  
+
   def handle_user_action(validator, user_action)
     if validator.present?
       if validator.valid? || user_action == "Force Submit"
@@ -105,13 +105,13 @@ class ServicesController < ApplicationController
       end
     end
   end
-  
+
   def update_billing_array (form)
     @billing_index = []
     @billing_array = []
     @billing.times do |n|
       @billing_index.push(n.to_s)
-      
+
       if form[@billing_index[n]].present?
          item = form[@billing_index[n]][:item]
          quantity = form[@billing_index[n]][:quantity]
@@ -121,11 +121,11 @@ class ServicesController < ApplicationController
         quantity = ""
         type = "0"
       end
-      
+
       @billing_array.push([item, quantity, type])
     end
   end
-  
+
   def string_to_boolean(string)
     if string == "1"
       return true

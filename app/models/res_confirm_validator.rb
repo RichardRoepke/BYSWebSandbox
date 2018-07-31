@@ -5,7 +5,7 @@ class ResConfirmValidator < ServiceValidator
 
   validates :reservation_ID, presence: { message: 'Reservation Request ID must be present' }
   validates :hold_token, presence: { message: 'Reservation Hold Token must be present' }
-  validates :action, format: { with: /\A(Confirm|Cancel)\z/, message: 'Action must be Confirm or Cancel.' }
+  validates :action, format: { with: /\A(CONFIRM|CANCEL)\z/, message: 'Action must be CONFIRM or CANCEL.' }
 
   def initialize(form)
     @request_ID = 'ReservationConfirmRequest'
@@ -25,7 +25,7 @@ class ResConfirmValidator < ServiceValidator
   def build_XML
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
-    xml.tag!('Envelope', 'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance', 
+    xml.tag!('Envelope', 'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance',
                          'xsi:noNamespaceSchemaLocation'=>'/home/bys/Desktop/SHARE/xml2/ReservationConfirmRequest/reservationConfirmRequest.xsd')  {
       xml.tag!('Body') {
         xml.tag!('reservationconfirm'){

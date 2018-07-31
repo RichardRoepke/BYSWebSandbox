@@ -7,7 +7,7 @@ class ResConfirmValidatorTest < ActiveSupport::TestCase
               security_key: 'yes',
               reservation_ID: '2',
               hold_token: 'hold',
-              action: 'Confirm' }
+              action: 'CONFIRM' }
     @validator = ResConfirmValidator.new(setup)
   end
 
@@ -39,9 +39,9 @@ class ResConfirmValidatorTest < ActiveSupport::TestCase
     @validator.action = 'cANCEL'
     assert_not @validator.valid?
 
-    @validator.action = 'Confirm'
+    @validator.action = 'CONFIRM'
     assert @validator.valid?
-    @validator.action = 'Cancel'
+    @validator.action = 'CANCEL'
     assert @validator.valid?
   end
 end

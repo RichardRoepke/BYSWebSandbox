@@ -77,7 +77,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                         security_key: 'yes',
                         reservation_ID: '2',
                         hold_token: 'hold',
-                        action: 'Confirm' }
+                        action: 'CONFIRM' }
 
     @siteusageform = { request_ID: 'SiteUsageHoldRequest',
                        park_ID: 'MCU108',
