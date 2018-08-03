@@ -14,6 +14,7 @@ class SiteUsageValidator < ServiceValidator
     @request_ID = 'SiteUsageHoldRequest'
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
+    @version_num = form[:version_num].to_s
     @usage_ID = form[:usage_ID].to_s
 
     @unit = UnitValidator.new( form[:unit] )
@@ -73,6 +74,7 @@ class SiteUsageValidator < ServiceValidator
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
               xml.ServiceRequestID 'SiteUsageHoldRequest'
+              xml.ServiceRequestVersion @version_num if @version_num.present?
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key

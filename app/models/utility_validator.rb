@@ -9,6 +9,7 @@ class UtilityValidator < ServiceValidator
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
               xml.ServiceRequestID @request_ID.to_s
+              xml.ServiceRequestVersion @version_num if @version_num.present?
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID.to_s
                 xml.CampGroundSecurityKey @security_key.to_s

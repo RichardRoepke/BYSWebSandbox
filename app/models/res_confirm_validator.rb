@@ -11,6 +11,7 @@ class ResConfirmValidator < ServiceValidator
     @request_ID = 'ReservationConfirmRequest'
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
+    @version_num = form[:version_num].to_s
     @reservation_ID = form[:reservation_ID].to_s
     @hold_token = form[:hold_token].to_s
     @action = form[:action].to_s
@@ -32,6 +33,7 @@ class ResConfirmValidator < ServiceValidator
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
               xml.ServiceRequestID 'ReservationConfirmRequest'
+              xml.ServiceRequestVersion @version_num if @version_num.present?
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key

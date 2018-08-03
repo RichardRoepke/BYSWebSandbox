@@ -13,6 +13,7 @@ class ResCreateValidator < ServiceValidator
     @request_ID = 'ReservationCreateRequest'
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
+    @version_num = form[:version_num].to_s
     @usage_token = form[:usage_token].to_s
     @billing = BillingArrayValidator.new( form[:billing] )
 
@@ -34,13 +35,14 @@ class ResCreateValidator < ServiceValidator
   def build_XML
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
-    xml.tag!('Envelope', 'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance', 
+    xml.tag!('Envelope', 'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance',
                          'xsi:noNamespaceSchemaLocation'=>'/home/bys/Desktop/SHARE/xml2/ReservationCreateRequest/reservationCreateRequest.xsd')  {
       xml.tag!('Body') {
         xml.tag!('reservationcreate'){
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
               xml.ServiceRequestID 'ReservationCreateRequest'
+              xml.ServiceRequestVersion @version_num if @version_num.present?
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key
@@ -80,7 +82,7 @@ class ResCreateValidator < ServiceValidator
               xml.tag!('CCInfo') {
                 xml.CCType @customer.cc_type
                 xml.CCExpiry @customer.cc_expiry
-                xml.CC_Enc @customer.cc_number
+                xml.CCNumber @customer.cc_number
               }
 
               xml.NoteToPark @customer.note unless @customer.note == ''

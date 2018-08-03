@@ -13,6 +13,7 @@ class CalculateValidator < ServiceValidator
     @request_ID = 'SiteAvailabilityRequest'
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
+    @version_num = form[:version_num].to_s
 
     @site.internal_UID = form[:internal_UID].to_s
     @site.type_ID = form[:type_ID].to_s
@@ -46,13 +47,14 @@ class CalculateValidator < ServiceValidator
 
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct! :xml, :version=>'1.0' #:content_type=>'text/xml' #, :encoding=>'UTF-8'
-    xml.tag!('Envelope', 'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance', 
+    xml.tag!('Envelope', 'xmlns:xsi'=>'http://www.w3.org/2001/XMLSchema-instance',
                          'xsi:noNamespaceSchemaLocation'=>'/home/bys/Desktop/SHARE/xml2/RateCalculationRequest/rateCalculationRequest.xsd')  {
       xml.tag!('Body') {
         xml.tag!('ratecalculation'){
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
               xml.ServiceRequestID 'RateCalculationRequest'
+              xml.ServiceRequestVersion @version_num if @version_num.present?
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key

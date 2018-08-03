@@ -2,21 +2,24 @@
 
 <div class="form">
   <div class="col-md-6 col-md-offset-3">
-    <%= form_for :input_form, method: :get do |f| %>     
+    <%= form_for :input_form, method: :get do |f| %>
+      <%= f.label :version_num, "Service Request Version (Leave blank to not include)" %>
+      <%= f.text_field :version_num, value: @set[:version_num] %>
+
       <%= f.label :park_ID, "Camp Ground User Name" %>
       <%= f.text_field :park_ID, value: @set[:park_ID] %>
-      
+
       <%= f.label :security_key, "Camp Ground Security Key" %>
       <%= f.text_field :security_key, value: @set[:security_key] %>
-      
+
       <%= f.label :res_token, "Reservation Hold Hold Token" %>
       <%= f.text_field :res_token, value: @set[:res_token] %>
-      
+
       <hr />
-      
+
       <%= f.submit "Check XML", name: "user_action" %>
       <%= f.submit "Submit", name: "user_action" %>
       <%= f.submit "Force Submit", name: "user_action" %>
     <% end %>
-  </div>  
+  </div>
 </div>

@@ -9,6 +9,7 @@ class ResReverseValidator < ServiceValidator
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
     @res_token = form[:res_token].to_s
+    @version_num = form[:version_num].to_s
 
     @output = Hash.new
   end
@@ -26,7 +27,8 @@ class ResReverseValidator < ServiceValidator
         xml.tag!('reservationreverse'){
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
-              xml.ServiceRequestID @request_ID.to_s
+              xml.ServiceRequestID 'ReservationReversalRequest'
+              xml.ServiceRequestVersion @version_num if @version_num.present?
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID.to_s
                 xml.CampGroundSecurityKey @security_key.to_s

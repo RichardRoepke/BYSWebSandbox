@@ -30,6 +30,7 @@ class ResHoldValidator < CalculateValidator
     @request_ID = 'ReservationHoldRequest'
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
+    @version_num = form[:version_num].to_s
     @reservation_ID = form[:reservation_ID].to_s
     @rate_ID = form[:rate_ID].to_s
     @member_UUID = form[:member_UUID].to_s
@@ -89,6 +90,7 @@ class ResHoldValidator < CalculateValidator
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
               xml.ServiceRequestID 'ReservationHoldRequest'
+              xml.ServiceRequestVersion @version_num
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key
@@ -134,12 +136,12 @@ class ResHoldValidator < CalculateValidator
                 @site_choice.each do |id, site|
                   xml.SiteName site.to_s unless site.to_s == ''
                 end
-              } unless no_site_choice? 
+              } unless no_site_choice?
 
               xml.tag!('Loyalty') {
                 xml.LoyaltyCode @loyalty_code
                 xml.LoyaltyText @loyalty_text
-              } unless @loyalty_text == '' # We already know that the code matches so no need to check both. 
+              } unless @loyalty_text == '' # We already know that the code matches so no need to check both.
 
               xml.tag!('BillingDetails'){
                 @billing.billing_array.each do |bill|
