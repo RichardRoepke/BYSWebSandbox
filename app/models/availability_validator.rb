@@ -13,6 +13,7 @@ class AvailabilityValidator < ServiceValidator
     @request_ID = 'SiteAvailabilityRequest'
     @park_ID = form[:park_ID].to_s
     @security_key = form[:security_key].to_s
+    @version_num = form[:version_num].to_s
     @request_unav = form[:request_unav].to_s
 
     @unit.internal_UID = form[:internal_UID].to_s
@@ -52,6 +53,7 @@ class AvailabilityValidator < ServiceValidator
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
               xml.ServiceRequestID 'SiteAvailabilityRequest'
+              xml.ServiceRequestVersion @version_num if @version_num.present?
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key

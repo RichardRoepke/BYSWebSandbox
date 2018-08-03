@@ -2,67 +2,70 @@
 
 <div class="form">
   <div class="col-md-6 col-md-offset-3">
-    <%= form_for :input_form, method: :get do |f| %>     
+    <%= form_for :input_form, method: :get do |f| %>
+      <%= f.label :version_num, "Service Request Version (Leave blank to not include)" %>
+      <%= f.text_field :version_num, value: @set[:version_num] %>
+
       <%= f.label :park_ID, "Camp Ground User Name" %>
       <%= f.text_field :park_ID, value: @set[:park_ID] %>
-      
+
       <%= f.label :security_key, "Camp Ground Security Key" %>
       <%= f.text_field :security_key, value: @set[:security_key] %>
-      
+
       <%= f.label :usage_ID, "Usage Request ID" %>
       <%= f.text_field :usage_ID, value: @set[:usage_ID] %>
-      
+
       <%= f.label :arrival_date, "Arrival Date" %>
       <%= f.text_field :arrival_date, name: "input_form[date][arrival_date]", value: @set[:date][:arrival_date] %>
-      
+
       <%= f.label :num_nights, "Number of Nights" %>
       <%= f.text_field :num_nights, name: "input_form[date][num_nights]", value: @set[:date][:num_nights] %>
-      
+
       <%= f.label :site_internal_UID, "Site Type Internal UID (Leave blank to not include)" %>
       <%= f.text_field :site_internal_UID, name: "input_form[site][internal_UID]", value: @set[:site][:internal_UID] %>
-      
+
       <%= f.label :site_type_ID, "Site Type ID (Leave blank to not include)" %>
       <%= f.text_field :site_type_ID, name: "input_form[site][type_ID]", value: @set[:site][:type_ID] # Is always overwritten by UID.
        %>
-       
+
       <%= f.label :unit_internal_UID, "Unit Type Internal UID (Leave blank to not include)" %>
       <%= f.text_field :unit_internal_UID, name: "input_form[unit][internal_UID]", value: @set[:unit][:internal_UID] %>
-      
+
       <%= f.label :unit_type_ID, "Unit Type ID (Leave blank to not include)" %>
       <%= f.text_field :unit_type_ID, name: "input_form[unit][type_ID]", value: @set[:unit][:type_ID] # Is always overwritten by UID.
        %>
-      
+
       <%= f.label :unit_length, "Unit Length (Leave blank to not include)" %>
       <%= f.text_field :unit_length, name: "input_form[unit][length]", value: @set[:unit][:length] %>
-      
+
       <hr />
-      
+
       <%= f.label :site1_internal_UID, "Site Choice #1: Type Internal UID (Leave blank to not include)" %>
       <%= f.text_field :site1_internal_UID, name: "input_form[site_choice][site1][internal_UID]", value: @set[:site_choice][:site1][:internal_UID] %>
-      
+
       <%= f.label :site1_type_ID, "Site Choice #1: Type ID (Leave blank to not include)" %>
       <%= f.text_field :site1_type_ID, name: "input_form[site_choice][site1][type_ID]", value: @set[:site_choice][:site1][:type_ID] # Is always overwritten by UID.
        %>
-       
+
        <%= f.label :site2_internal_UID, "Site Choice #2: Type Internal UID (Leave blank to not include)" %>
       <%= f.text_field :site2_internal_UID, name: "input_form[site_choice][site2][internal_UID]", value: @set[:site_choice][:site2][:internal_UID] %>
-      
+
       <%= f.label :site2_type_ID, "Site Choice #2: Type ID (Leave blank to not include)" %>
       <%= f.text_field :site2_type_ID, name: "input_form[site_choice][site2][type_ID]", value: @set[:site_choice][:site2][:type_ID] # Is always overwritten by UID.
        %>
-       
+
        <%= f.label :site3_internal_UID, "Site Choice #3: Type Internal UID (Leave blank to not include)" %>
       <%= f.text_field :site3_internal_UID, name: "input_form[site_choice][site3][internal_UID]", value: @set[:site_choice][:site3][:internal_UID] %>
-      
+
       <%= f.label :site3_type_ID, "Site Choice #3: Type ID (Leave blank to not include)" %>
       <%= f.text_field :site3_type_ID, name: "input_form[site_choice][site3][type_ID]", value: @set[:site_choice][:site3][:type_ID] # Is always overwritten by UID.
        %>
-      
+
       <hr />
-      
+
       <%= f.submit "Check XML", name: "user_action" %>
       <%= f.submit "Submit", name: "user_action" %>
       <%= f.submit "Force Submit", name: "user_action" %>
     <% end %>
-  </div>  
+  </div>
 </div>
