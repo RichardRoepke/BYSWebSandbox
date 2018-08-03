@@ -54,13 +54,6 @@ class ServiceValidator
     end
   end
 
-  def build_json
-    request_XML = build_XML
-    puts '========================================================'
-    puts Hash.from_xml(request_XML).to_json.to_s
-    puts '========================================================'
-  end
-
   def resolve_action(user_action)
     if ['Check XML', 'Submit XML', 'Force XML'].include? user_action
       request_XML = build_XML
@@ -70,10 +63,62 @@ class ServiceValidator
           output[:xml_title] = 'Service Request'
           output[:xml] = request_XML
         else
-          @output = api_call(generate_path, request_XML)
+          @output = xml_api_call(generate_path, request_XML)
         end
       end
-    elsif false
+    elsif ['Check JSON', 'Submit JSON', 'Force JSON'].include? user_action
+      request_JSON = build_JSON
+
+      if request_JSON.present?
+        if user_action == 'Check JSON'
+          output[:xml_title] = 'Service Request'
+          output[:xml] = request_JSON
+        else
+          @output = json_api_call(generate_path, request_JSON)
+        end
+      end
     end
   end # - resolve_user_action
+
+  def build_JSON
+    temp_hash = Hash.from_xml(build_XML)
+    temp_hash["Envelope"].delete("xmlns:xsi")
+    temp_hash["Envelope"].delete("xsi:noNamespaceSchemaLocation")
+    temp_hash = json_recursive_reformat(temp_hash)
+    json_result = JSON.pretty_generate(temp_hash)
+    return json_result
+  end
+
+  def json_recursive_reformat (hash)
+    result_hash = {}
+
+    hash.each do |key, value|
+      if value.kind_of?(Hash)
+        # If the value is a hash with 1 key-value pair, check if that child is an array.
+        # If so, we need to reformat the current key-value pair. Not the value's key-value key.
+        if value.length == 1 && value.select{|k, v| v.kind_of?(Array)}.present?
+          result_hash[key] = reformat_array(value)
+        else
+          result_hash[key] = json_recursive_reformat(value)
+        end
+      else
+        result_hash[key] = value
+      end
+    end
+
+    return result_hash
+  end
+
+  def reformat_array (array)
+    result_array = []
+
+    child_pair = array.shift
+
+    child_pair[1].each do |content|
+      temp_hash = { child_pair[0] => content }
+      result_array.push temp_hash
+    end
+
+    return result_array
+  end
 end

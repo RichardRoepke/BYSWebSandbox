@@ -97,7 +97,7 @@ class ServicesController < ApplicationController
 
   def handle_user_action(validator, user_action)
     if validator.present?
-      if validator.valid? || user_action == "Force Submit"
+      if validator.valid? || user_action.include?('Force')
         validator.resolve_action(user_action)
         @output = validator.output
       else
