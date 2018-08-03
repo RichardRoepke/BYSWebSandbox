@@ -109,11 +109,12 @@ class ServiceValidator
     return result_hash
   end
 
-  def reformat_array (array)
+  def reformat_array (input_hash)
     result_array = []
 
-    child_pair = array.shift
-
+    # input_hash is guaranteed to have a single key-value pair, where the value
+    # is some kind of array.
+    child_pair = input_hash.shift
     child_pair[1].each do |content|
       temp_hash = { child_pair[0] => content }
       result_array.push temp_hash

@@ -18,13 +18,14 @@
         ["Site Usage Cancellation Service", "siteusagecancel"],
         ["Reservation Reversal Service", "reservationreverse"]], @set[:request_ID])%>
       <%= f.select(:request_ID, requestoptions) %>
-      
-      <%= f.label :xml, "XML" %>
-      <%= f.text_area :xml, value: @set[:xml] %>
-      
+
+      <%= f.label :input, "Input" %>
+      <%= f.text_area :input, value: @set[:input] %>
+
       <hr />
-      
-      <%= f.submit "Submit", name: "user_action" %>
+
+      <%= f.submit "Submit XML", name: "user_action" %>
+      <%= f.submit "Submit JSON", name: "user_action" %>
     <% end %>
-  </div>  
+  </div>
 </div>
