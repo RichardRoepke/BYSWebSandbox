@@ -54,16 +54,26 @@ class ServiceValidator
     end
   end
 
-  def resolve_action(user_action)
+  def build_json
     request_XML = build_XML
+    puts '========================================================'
+    puts Hash.from_xml(request_XML).to_json.to_s
+    puts '========================================================'
+  end
 
-    if request_XML.present?
-      if user_action == 'Check XML'
-        output[:xml_title] = 'Service Request'
-        output[:xml] = request_XML
-      elsif user_action == 'Submit' || user_action == 'Force Submit'
-        @output = api_call(generate_path, request_XML)
+  def resolve_action(user_action)
+    if ['Check XML', 'Submit XML', 'Force XML'].include? user_action
+      request_XML = build_XML
+
+      if request_XML.present?
+        if user_action == 'Check XML'
+          output[:xml_title] = 'Service Request'
+          output[:xml] = request_XML
+        else
+          @output = api_call(generate_path, request_XML)
+        end
       end
+    elsif false
     end
   end # - resolve_user_action
 end

@@ -90,7 +90,7 @@ class ResHoldValidator < CalculateValidator
           xml.tag!('RequestData'){
             xml.tag!('RequestIdentification'){
               xml.ServiceRequestID 'ReservationHoldRequest'
-              xml.ServiceRequestVersion @version_num
+              xml.ServiceRequestVersion @version_num if @version_num.present?
               xml.tag!('CampGroundIdentification'){
                 xml.CampGroundUserName @park_ID
                 xml.CampGroundSecurityKey @security_key
