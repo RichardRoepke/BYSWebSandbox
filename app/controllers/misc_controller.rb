@@ -1,7 +1,7 @@
 class MiscController < ApplicationController
   include ApiHelper
 
-  def xml_parse
+  def text_parse
     @output = {}
 
     if params[:input_form].present?

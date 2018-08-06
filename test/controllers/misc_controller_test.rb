@@ -9,7 +9,7 @@ class MiscControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'xml parse: should be setup properly' do
-    get xmlparse_path
+    get textparse_path
     assert_response :success
     assert_select 'title', 'BYS Web Sandbox: XML Parser'
 
