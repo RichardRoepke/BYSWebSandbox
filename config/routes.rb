@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   root 'static_pages#main'
   get  '/service', to: 'static_pages#service'
   get  '/misc', to: 'static_pages#misc'

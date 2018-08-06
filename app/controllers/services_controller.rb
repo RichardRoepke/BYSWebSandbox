@@ -2,6 +2,9 @@ require 'builder'
 require 'rexml/document'
 
 class ServicesController < ApplicationController
+
+  before_action :authenticate_user!
+
   def utility
     page_generation
   end
@@ -39,8 +42,6 @@ class ServicesController < ApplicationController
   end
 
   def page_generation
-    @output = {}
-
     if params[:input_form]
       @set = params[:input_form]
 

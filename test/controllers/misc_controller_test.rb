@@ -2,6 +2,8 @@ require 'test_helper'
 
 class MiscControllerTest < ActionDispatch::IntegrationTest
   def setup
+    sign_in_user
+
     @requestIDs = %w{ unittypeinfo sitetypeinfo notesandterms byspublickey
                       siteavailability ratecalculation reservationhold
                       reservationconfirm siteusagehold reservationcreate
@@ -11,7 +13,7 @@ class MiscControllerTest < ActionDispatch::IntegrationTest
   test 'xml parse: should be setup properly' do
     get textparse_path
     assert_response :success
-    assert_select 'title', 'BYS Web Sandbox: XML Parser'
+    assert_select 'title', 'BYS Web Sandbox: Text Parser'
 
     assert_select 'select[id=?]', 'input_form_request_ID'
 

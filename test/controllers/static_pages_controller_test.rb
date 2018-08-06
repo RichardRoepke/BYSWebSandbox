@@ -2,6 +2,8 @@ require 'test_helper'
 
 class StaticPagesControllerTest < ActionDispatch::IntegrationTest
   def setup
+    sign_in_user
+
     @title = 'BYS Web Sandbox'
   end
 

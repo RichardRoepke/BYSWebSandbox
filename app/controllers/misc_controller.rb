@@ -1,6 +1,8 @@
 class MiscController < ApplicationController
   include ApiHelper
 
+  before_action :authenticate_user!
+
   def text_parse
     @output = {}
 
