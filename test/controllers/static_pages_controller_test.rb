@@ -9,9 +9,8 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should redirect when not logged in' do
     sign_out users(:one)
-    get root_url
+    get utility_path
     assert_response :found
-    assert_select 'a[href=?]', 'http://www.example.com/users/sign_in'
   end
 
   test 'should get main' do

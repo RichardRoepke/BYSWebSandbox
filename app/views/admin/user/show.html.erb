@@ -1,0 +1,5 @@
+<% provide(:title, "User Details") %>
+
+<p><%= 'Email: ' + @user.email %>  <%= '(UNCONFIRMED)' if @user.confirmed_at.blank? %></p>
+<p><%= 'Admin? ' + @user.admin.to_s %></p>
+

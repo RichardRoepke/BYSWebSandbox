@@ -6,7 +6,7 @@ class AdminServicesController < ApplicationController
 
   def ensure_admin
     unless current_user.try(:admin?)
-      redirect_to root_path, alert: 'User does not have administrative privilages.'
+      redirect_to root_path, alert: 'Current user does not have administrative privilages.'
     end
   end
 end
