@@ -15,17 +15,17 @@
         <% flash.each do |message_type, message| %>
           <div class="alert"><%= message %></div>
         <% end %>
-        
+
         <h1><%= yield(:title) %></h1>
         <hr/>
 
         <%= render :partial => 'shared/requesterrors' if @output[:request_errors].present? %>
-        
+
         <%= yield %>
 
         <%= render 'shared/responsefail' if @output[:response_fail].present? %>
-        <%= render 'shared/showxml' if @output[:xml].present? && @output[:xml_title].present? %>
-        
+        <%= render 'shared/showresponse' if @output[:response].present? && @output[:response_title].present? %>
+
         <%= debug(params) if Rails.env.development? %>
       </div>
   </body>

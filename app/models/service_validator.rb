@@ -60,10 +60,10 @@ class ServiceValidator
 
       if request_XML.present?
         if user_action == 'Check XML'
-          output[:xml_title] = 'Service Request'
-          output[:xml] = request_XML
+          output[:response_title] = 'Service Request'
+          output[:response] = request_XML
         else
-          @output = xml_api_call(generate_path, request_XML)
+          @output = api_call(generate_path, request_XML, 'XML')
         end
       end
     elsif ['Check JSON', 'Submit JSON', 'Force JSON'].include? user_action
@@ -71,21 +71,24 @@ class ServiceValidator
 
       if request_JSON.present?
         if user_action == 'Check JSON'
-          output[:xml_title] = 'Service Request'
-          output[:xml] = request_JSON
+          output[:response_title] = 'Service Request'
+          output[:response] = request_JSON
         else
-          @output = json_api_call(generate_path, request_JSON)
+          @output = api_call(generate_path, request_JSON, 'JSON')
         end
       end
     end
   end # - resolve_user_action
 
+  # Building JSON by calling build_xml and converting the result to JSON.
+  # Some postprocessing is needed however, to ensure that the resulting JSON
+  # will be read by web services.
   def build_JSON
     temp_hash = Hash.from_xml(build_XML)
     temp_hash["Envelope"].delete("xmlns:xsi")
     temp_hash["Envelope"].delete("xsi:noNamespaceSchemaLocation")
     temp_hash = json_recursive_reformat(temp_hash)
-    json_result = JSON.pretty_generate(temp_hash)
+    json_result = JSON.pretty_generate(temp_hash) # Making the result more human-readable.
     return json_result
   end
 

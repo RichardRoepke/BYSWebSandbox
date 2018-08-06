@@ -1,95 +1,59 @@
 require "rexml/document"
 
 module ApiHelper
-  def xml_api_call(path, xml)
+  def api_call(path, input, type)
     output = {}
 
-    service_response = Typhoeus::Request.post( path,
-                                           headers: {'Content-Type' => 'text/xml'},
-                                           body: xml,
-                                           :ssl_verifyhost => 0 ) #Server is set as verified but without proper certification.
+    if type == 'XML'
+      service_response = Typhoeus::Request.post( path,
+                                                 headers: {'Content-Type' => 'text/xml'},
+                                                 body: input,
+                                                 :ssl_verifyhost => 0 ) #Server is set as verified but without proper certification.
+    elsif type == 'JSON'
+      service_response = Typhoeus::Request.post( path,
+                                                 headers: {'Content-Type' => 'text/json'},
+                                                 body: input,
+                                                 :ssl_verifyhost => 0 ) #Server is set as verified but without proper certification.
+    end
 
-        # In certain cases Web Services may complete the connection but send
-        # nothing in response. So a successful request doesn't mean a response
-        # was received in return.
-        if service_response.success? && service_response.response_body.present?
-          output[:xml_title] = 'Service Response'
-          output[:xml] = service_response.response_body
+    # In certain cases Web Services may complete the connection but send
+    # nothing in response. So a successful request doesn't mean a response
+    # was received in return.
+    if service_response.success? && service_response.response_body.present?
+      output[:response_title] = 'Service Response'
+      output[:response] = service_response.response_body
 
-          doc = REXML::Document.new output[:xml]
+      if type == 'XML'
+        doc = REXML::Document.new output[:response]
 
-          # Quick and simple way to find if a fault was sent by the server.
-          doc.each_element('//Fault'){ |f|
+        # Quick and simple way to find if a fault was sent by the server.
+        doc.each_element('//Fault'){ |f|
+          output[:response_fault_title] = 'ERROR'
 
-            f.each_element('//FaultCode'){ |c|
-              output[:xml_fault_title] = 'ERROR'
-              output[:xml_fault_title] = 'ERROR (' + c.text + ')' if c.has_text?
-
-              output[:xml_fault_help] = generate_troubleshooting(c.text)
-              }
-
-            f.each_element('//FaultMessage') { |m|
-
-              output[:xml_fault_title] += ': ' + m.text if m.has_text?
-              }
+          f.each_element('//FaultCode'){ |c|
+            output[:response_fault_title] += ' (' + c.text + ')' if c.has_text?
+            output[:response_fault_help] = generate_troubleshooting(c.text)
             }
-        else
-          # If the response succeeded but returned nothing.
-          if service_response.success?
-            output[:response_fail] = 'Connection was successful but web services responded with an empty message body. Please verify your inputs and try again.'
-          else
-            output[:response_fail] = service_response.code.to_s
-            output[:response_fail] += ': ' + service_response.return_message unless service_response.return_message == 'No error'
-          end
-        end
 
-        return output
-  end
-
-  def json_api_call(path, json)
-    output = {}
-
-    service_response = Typhoeus::Request.post( path,
-                                           headers: {'Content-Type' => 'text/json'},
-                                           body: json,
-                                           :ssl_verifyhost => 0 ) #Server is set as verified but without proper certification.
-
-        # In certain cases Web Services may complete the connection but send
-        # nothing in response. So a successful request doesn't mean a response
-        # was received in return.
-        if service_response.success? && service_response.response_body.present?
-          output[:xml_title] = 'Service Response'
-          output[:xml] = service_response.response_body
-=begin
-          doc = REXML::Document.new output[:xml]
-
-          # Quick and simple way to find if a fault was sent by the server.
-          doc.each_element('//Fault'){ |f|
-
-            f.each_element('//FaultCode'){ |c|
-              output[:xml_fault_title] = 'ERROR'
-              output[:xml_fault_title] = 'ERROR (' + c.text + ')' if c.has_text?
-
-              output[:xml_fault_help] = generate_troubleshooting(c.text)
-              }
-
-            f.each_element('//FaultMessage') { |m|
-
-              output[:xml_fault_title] += ': ' + m.text if m.has_text?
-              }
+          f.each_element('//FaultMessage') { |m|
+            output[:response_fault_title] += ': ' + m.text if m.has_text?
             }
-=end
-        else
-          # If the response succeeded but returned nothing.
-          if service_response.success?
-            output[:response_fail] = 'Connection was successful but web services responded with an empty message body. Please verify your inputs and try again.'
-          else
-            output[:response_fail] = service_response.code.to_s
-            output[:response_fail] += ': ' + service_response.return_message unless service_response.return_message == 'No error'
-          end
-        end
+          }
+      elsif type == 'JSON'
+        # Web services doesn't process JSON yet so handling error messages
+        # will have to wait until it does.
+      end
+    else
+      # If the response succeeded but returned nothing.
+      if service_response.success?
+        output[:response_fail] = 'Connection was successful but web services responded with an empty message body. Please verify your inputs and try again.'
+      else
+        output[:response_fail] = service_response.code.to_s
+        output[:response_fail] += ': ' + service_response.return_message unless service_response.return_message == 'No error'
+      end
+    end
 
-        return output
+    return output
   end
 
   def generate_troubleshooting(error_code)

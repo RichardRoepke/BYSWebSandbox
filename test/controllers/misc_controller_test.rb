@@ -7,7 +7,7 @@ class MiscControllerTest < ActionDispatch::IntegrationTest
                       reservationconfirm siteusagehold reservationcreate
                       siteusagecancel reservationreverse }
   end
-  
+
   test 'xml parse: should be setup properly' do
     get xmlparse_path
     assert_response :success
@@ -18,7 +18,8 @@ class MiscControllerTest < ActionDispatch::IntegrationTest
     @requestIDs.each do |id|
       assert_select 'option[value=?]', id
     end
-    
-    assert_select 'input[value=?]', 'Submit'
+
+    assert_select 'input[value=?]', 'Submit XML'
+    assert_select 'input[value=?]', 'Submit JSON'
   end
 end

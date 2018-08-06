@@ -1,0 +1,14 @@
+<hr/>
+
+<h3><%= @output[:response_title]%></h3>
+
+<% if @output[:response_fault_title].present? %>
+  <div class="errorExplanation">
+    <h3><%= @output[:response_fault_title] %></h3>
+    <%= @output[:response_fault_help] if @output[:response_fault_help].present? %>
+  </div>
+<% end %>
+
+<div class="formatXML">
+  <pre><%= @output[:response] %></pre>
+</div>
