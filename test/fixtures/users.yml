@@ -6,6 +6,15 @@
 #
 one:
   email: test@example.org
-  encrypted_password: $2a$04$DR0.2yfWwD8AZlyeXx0gEuk2Qh.cNLF4cir0ZUB1iW7hwQhK/IfcC
-two: {}
+  encrypted_password: foobar
+  admin: false
+two:
+  email: jimmy@example.org
+  encrypted_password: foobar
+  admin: false
+
+admin:
+  email: admin@example.org
+  encrypted_password: shortandsimple
+  admin: true
 # column: value

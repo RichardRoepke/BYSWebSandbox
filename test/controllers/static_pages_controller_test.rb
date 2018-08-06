@@ -7,6 +7,13 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     @title = 'BYS Web Sandbox'
   end
 
+  test 'should redirect when not logged in' do
+    sign_out users(:one)
+    get root_url
+    assert_response :found
+    assert_select 'a[href=?]', 'http://www.example.com/users/sign_in'
+  end
+
   test 'should get main' do
     get root_url
     assert_response :success

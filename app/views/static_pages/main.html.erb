@@ -1,4 +1,19 @@
 <% provide(:title, "Main") %>
+
+<% if current_user.blank? %>
+  <%= link_to "Log in", new_user_session_path %><br />
+
+  <%= link_to "Sign up", new_user_registration_path %><br />
+
+  <%= link_to "Forgot your password?", new_user_password_path %><br />
+
+  <%= link_to "Didn't receive confirmation instructions?", new_user_confirmation_path %><br />
+
+  <%= link_to "Didn't receive unlock instructions?", new_user_unlock_path() %><br />
+<% end -%>
+
+
+<% if current_user.present? %>
 <h3>Service Requests:</h3>
 <p>Forms to enter data and automatically generate the needed xml requests for web service API.
   Also allows the requests to be sent to the web service test server to verify their accuracy.</p>
@@ -19,3 +34,4 @@
   <li><%= link_to "Text Parser", textparse_path %>:
      Parses raw text input as a request and allows it to be sent directly to the web services test server.</li>
 </ul>
+<% end %>

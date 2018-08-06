@@ -1,7 +1,10 @@
 <header class="pagebanner">
 
   <%= link_to "Main", root_path, :class => 'button' %>
-  <%= link_to "Service Requests", service_path, :class => 'button' %>
-  <%= link_to "Miscellaneous", misc_path, :class => 'button' %>
+  <%= link_to "Service Requests", service_path, :class => 'button' if current_user.present?  %>
+  <%= link_to "Miscellaneous", misc_path, :class => 'button' if current_user.present?  %>
+  <%= link_to 'Logout', destroy_user_session_path, method: :delete, :class => 'button' if current_user.present? %>
+  <%= 'Current User: ' + current_user.email if current_user.present? %>
+  <%= 'Not Logged In' if current_user.blank? %>
 
 </header>
