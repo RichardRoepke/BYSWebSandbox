@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   get  '/service', to: 'static_pages#service'
   get  '/misc', to: 'static_pages#misc'
 
+  get  '/admin', to: 'admin_services#admin'
+
   get  '/utility', to: 'services#utility'
   get  '/availability', to: 'services#availability'
   get  '/calculate', to: 'services#calculate'
