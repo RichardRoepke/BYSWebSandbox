@@ -55,15 +55,74 @@ class ServiceValidator
   end
 
   def resolve_action(user_action)
-    request_XML = build_XML
+    if ['Check XML', 'Submit XML', 'Force XML'].include? user_action
+      request_XML = build_XML
 
-    if request_XML.present?
-      if user_action == 'Check XML'
-        output[:xml_title] = 'Service Request'
-        output[:xml] = request_XML
-      elsif user_action == 'Submit' || user_action == 'Force Submit'
-        @output = api_call(generate_path, request_XML)
+      if request_XML.present?
+        if user_action == 'Check XML'
+          output[:response_title] = 'Service Request'
+          output[:response] = request_XML
+        else
+          @output = api_call(generate_path, request_XML, 'XML')
+        end
+      end
+    elsif ['Check JSON', 'Submit JSON', 'Force JSON'].include? user_action
+      request_JSON = build_JSON
+
+      if request_JSON.present?
+        if user_action == 'Check JSON'
+          output[:response_title] = 'Service Request'
+          output[:response] = request_JSON
+        else
+          @output = api_call(generate_path, request_JSON, 'JSON')
+        end
       end
     end
   end # - resolve_user_action
+
+  # Building JSON by calling build_xml and converting the result to JSON.
+  # Some postprocessing is needed however, to ensure that the resulting JSON
+  # will be read by web services.
+  def build_JSON
+    temp_hash = Hash.from_xml(build_XML)
+    temp_hash["Envelope"].delete("xmlns:xsi")
+    temp_hash["Envelope"].delete("xsi:noNamespaceSchemaLocation")
+    temp_hash = json_recursive_reformat(temp_hash)
+    json_result = JSON.pretty_generate(temp_hash) # Making the result more human-readable.
+    return json_result
+  end
+
+  def json_recursive_reformat (hash)
+    result_hash = {}
+
+    hash.each do |key, value|
+      if value.kind_of?(Hash)
+        # If the value is a hash with 1 key-value pair, check if that child is an array.
+        # If so, we need to reformat the current key-value pair. Not the value's key-value key.
+        if value.length == 1 && value.select{|k, v| v.kind_of?(Array)}.present?
+          result_hash[key] = reformat_array(value)
+        else
+          result_hash[key] = json_recursive_reformat(value)
+        end
+      else
+        result_hash[key] = value
+      end
+    end
+
+    return result_hash
+  end
+
+  def reformat_array (input_hash)
+    result_array = []
+
+    # input_hash is guaranteed to have a single key-value pair, where the value
+    # is some kind of array.
+    child_pair = input_hash.shift
+    child_pair[1].each do |content|
+      temp_hash = { child_pair[0] => content }
+      result_array.push temp_hash
+    end
+
+    return result_array
+  end
 end

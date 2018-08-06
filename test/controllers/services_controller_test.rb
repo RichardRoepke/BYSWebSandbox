@@ -149,8 +149,8 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'input[id=?]', 'input_form_security_key'
 
     assert_select 'input[value=?]', 'Check XML'
-    assert_select 'input[value=?]', 'Submit'
-    assert_select 'input[value=?]', 'Force Submit'
+    assert_select 'input[value=?]', 'Submit XML'
+    assert_select 'input[value=?]', 'Force XML'
   end
 
   # utility_validator_test handles the validation of values, so if this test
@@ -171,7 +171,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'utility: generate and show proper xml on submit' do
-    get utility_path, params: { user_action: 'Submit',
+    get utility_path, params: { user_action: 'Submit XML',
                                 input_form: @utilityform }
     assert_select 'div[class=?]', 'formatXML'
     assert_select 'div[class=?]', 'errorExplanation', count: 0
@@ -179,7 +179,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
 
   test 'utility: error on requesting park not in database' do
     @utilityform[:park_ID] = 'MC0000'
-    get utility_path, params: { user_action: 'Submit',
+    get utility_path, params: { user_action: 'Submit XML',
                                 input_form: @utilityform }
     assert_select 'div[class=?]', 'formatXML'
     assert_select 'div[class=?]', 'errorExplanation'
@@ -208,8 +208,8 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'input[type=?]', 'checkbox', count: 1
 
     assert_select 'input[value=?]', 'Check XML'
-    assert_select 'input[value=?]', 'Submit'
-    assert_select 'input[value=?]', 'Force Submit'
+    assert_select 'input[value=?]', 'Submit XML'
+    assert_select 'input[value=?]', 'Force XML'
   end
 
   # availability_validator handles the validation of values, so if this test
@@ -235,14 +235,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'availability: generate and show proper xml on submit' do
-    get availability_path, params: { user_action: 'Submit',
+    get availability_path, params: { user_action: 'Submit XML',
                                      input_form: @availabilityform }
     assert_select 'div[class=?]', 'formatXML'
   end
 
   test 'availability: error on requesting park not in database' do
     @availabilityform[:park_ID] = 'MC0000'
-    get availability_path, params: { user_action: 'Submit',
+    get availability_path, params: { user_action: 'Submit XML',
                                      input_form: @availabilityform }
     assert_select 'div[class=?]', 'formatXML'
     assert_select 'div[class=?]', 'errorExplanation'
@@ -273,8 +273,8 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'input[id=?]', 'input_form_quantity0'
 
     assert_select 'input[value=?]', 'Check XML'
-    assert_select 'input[value=?]', 'Submit'
-    assert_select 'input[value=?]', 'Force Submit'
+    assert_select 'input[value=?]', 'Submit XML'
+    assert_select 'input[value=?]', 'Force XML'
     assert_select 'input[value=?]', 'Update'
   end
 
@@ -304,14 +304,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'calculation: generate and show proper xml on submit' do
-    get calculate_path, params: { user_action: 'Submit',
+    get calculate_path, params: { user_action: 'Submit XML',
                                   input_form: @calculateform }
     assert_select 'div[class=?]', 'formatXML'
   end
 
   test 'calculation: error on requesting park not in database' do
     @calculateform[:park_ID] = 'MC0000'
-    get calculate_path, params: { user_action: 'Submit',
+    get calculate_path, params: { user_action: 'Submit XML',
                                   input_form: @calculateform }
     assert_select 'div[class=?]', 'formatXML'
     assert_select 'div[class=?]', 'errorExplanation'
@@ -412,14 +412,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'reservation hold: generate and show proper xml on submit' do
-    get reservationhold_path, params: { user_action: 'Submit',
+    get reservationhold_path, params: { user_action: 'Submit XML',
                                         input_form: @resholdform }
     assert_select 'div[class=?]', 'formatXML'
   end
 
   test 'reservation hold: error on requesting park not in database' do
     @resholdform[:park_ID] = 'MC0000'
-    get reservationhold_path, params: { user_action: 'Submit',
+    get reservationhold_path, params: { user_action: 'Submit XML',
                                         input_form: @resholdform }
     assert_select 'div[class=?]', 'formatXML'
     assert_select 'div[class=?]', 'errorExplanation'
@@ -492,7 +492,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     # these tests will be revised.
     # get reservationconfirm_path
     # assert_response :success
-    # get reservationconfirm_path, params: { user_action: 'Submit',
+    # get reservationconfirm_path, params: { user_action: 'Submit XML',
     #                                 input_form: @resholdform }
     # assert_select 'div[class=?]', 'formatXML'
   end
@@ -505,7 +505,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     # assert_response :success
 
     # @resholdform[:park_ID] = 'MC0000'
-    # get reservationconfirm_path, params: { user_action: 'Submit',
+    # get reservationconfirm_path, params: { user_action: 'Submit XML',
     #                                 input_form: @resholdform }
     # assert_select 'div[class=?]', 'formatXML'
     # assert_select 'div[class=?]', 'errorExplanation'
@@ -556,14 +556,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   test 'site usage: generate and show proper xml on submit' do
     # Will be reactivated when I figure out a proper submission for site usage
 
-    # get siteusage_path, params: { user_action: 'Submit',
+    # get siteusage_path, params: { user_action: 'Submit XML',
     #                              input_form: @resholdform }
     # assert_select 'div[class=?]', 'formatXML'
   end
 
   test 'site usage: error on requesting park not in database' do
     @siteusageform[:park_ID] = 'MC0000'
-    get siteusage_path, params: { user_action: 'Submit',
+    get siteusage_path, params: { user_action: 'Submit XML',
                                   input_form: @siteusageform }
     assert_select 'div[class=?]', 'formatXML'
     assert_select 'div[class=?]', 'errorExplanation'
@@ -624,7 +624,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'reservation create: generate and show proper xml on submit' do
-    get reservationcreate_path, params: { user_action: 'Submit',
+    get reservationcreate_path, params: { user_action: 'Submit XML',
                                           input_form: @rescreateform }
     # Figure this out when I get a proper example.
     assert_select 'div[class=?]', 'formatXML'
@@ -632,7 +632,7 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
 
   test 'reservation create: error on requesting park not in database' do
     @rescreateform[:park_ID] = 'MC0000'
-    get reservationcreate_path, params: { user_action: 'Submit',
+    get reservationcreate_path, params: { user_action: 'Submit XML',
                                           input_form: @rescreateform }
     # Figure this out when I get a proper example.
     assert_select 'div[class=?]', 'formatXML'
@@ -699,14 +699,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'site cancel: generate and show proper xml on submit' do
-    get sitecancel_path, params: { user_action: 'Submit',
+    get sitecancel_path, params: { user_action: 'Submit XML',
                                    input_form: @sitecancelform }
     assert_select 'div[class=?]', 'formatXML'
   end
 
   test 'site cancel: error on requesting park not in database' do
     @sitecancelform[:park_ID] = 'MC0000'
-    get sitecancel_path, params: { user_action: 'Submit',
+    get sitecancel_path, params: { user_action: 'Submit XML',
                                    input_form: @sitecancelform }
     # Figure this out when I get a proper example.
     assert_select 'div[class=?]', 'formatXML'
@@ -744,14 +744,14 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'reservation reverse: generate and show proper xml on submit' do
-    get reservationreverse_path, params: { user_action: 'Submit',
+    get reservationreverse_path, params: { user_action: 'Submit XML',
                                            input_form: @resreverseform }
     assert_select 'div[class=?]', 'formatXML'
   end
 
   test 'reservation reverse: error on requesting park not in database' do
     @resreverseform[:park_ID] = 'MC0000'
-    get reservationreverse_path, params: { user_action: 'Submit',
+    get reservationreverse_path, params: { user_action: 'Submit XML',
                                            input_form: @resreverseform }
     # Figure this out when I get a proper example.
     assert_select 'div[class=?]', 'formatXML'
