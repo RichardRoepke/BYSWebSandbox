@@ -11,7 +11,7 @@ module ApiHelper
                                                  :ssl_verifyhost => 0 ) #Server is set as verified but without proper certification.
     elsif type == 'JSON'
       service_response = Typhoeus::Request.post( path,
-                                                 headers: {'Content-Type' => 'text/json'},
+                                                 headers: {'Content-Type' => 'application/json'},
                                                  body: input,
                                                  :ssl_verifyhost => 0 ) #Server is set as verified but without proper certification.
     end
