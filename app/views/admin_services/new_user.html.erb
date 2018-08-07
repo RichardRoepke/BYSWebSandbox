@@ -9,14 +9,19 @@
       <%= f.label :security, "Camp Ground Security Key (Optional)" %>
       <%= f.text_field :security %>
 
-  <p> <%= f.label :admin, "Admin?" %>
-      <%= f.check_box :admin %> </p>
+      <%= f.label :admin, "Admin?" %>
+      <%= f.check_box :admin %>
 
-      <%= f.label :password, "Password (Minimum 6 characters)" %>
-      <%= f.password_field :password %>
 
-      <%= f.label :password_confirmation, "Password Confirmation" %>
-      <%= f.password_field :password_confirmation %>
+      <div class="field">
+        <%= f.label :password, "Password (Minimum 6 characters)" %> <br />
+        <%= f.password_field :password %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation, "Password Confirmation" %> <br />
+        <%= f.password_field :password_confirmation %>
+      </div>
 
       <%= f.submit "Create User" %>
     <% end %>

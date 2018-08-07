@@ -5,8 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-User.create!({email: 'admin@admin.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', confirmed_at: Time.zone.now, admin: true, security: 'Yes'})
-User.create!({email: 'user@user.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', confirmed_at: Time.zone.now, admin: false, security: 'No'})
+User.create!({email: 'richard@missionmgmt.com', password: 'asdfasdf', password_confirmation: 'asdfasdf', admin: true, security: 'Sure'})
+User.create!({email: 'admin@admin.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', admin: true, security: 'Yes'})
+User.create!({email: 'user@user.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', admin: false, security: 'No'})
 
 100.times do |num|
   mail = (0...(3 + rand(12))).map { (65 + rand(26)).chr }.join

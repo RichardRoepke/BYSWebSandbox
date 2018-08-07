@@ -25,19 +25,20 @@ class MiscController < ApplicationController
     if params[:input_form].present?
       @set = params[:input_form]
       if params[:commit] == 'Update Account'
-        if password_check && current_user.update(user_params)
-          flash[:success] = 'Your changes have been successfully updated.'
-          bypass_sign_in(current_user) # No need to log in again if the user updates their password.
-          redirect_to account_path
-        else
-          flash.now[:alert] = 'Update failed.'
-          if current_user.errors.present?
+        if password_check(params[:input_form][:password], params[:input_form][:old_password])
+          if current_user.update(user_params)
+            flash[:success] = 'Your changes have been successfully updated.'
+            bypass_sign_in(current_user) # No need to log in again if the user updates their password.
+            redirect_to account_path
+          else
+            flash.now[:alert] = 'Update failed.'
             current_user.errors.full_messages.each do |error|
               flash.now[error.to_sym] = error
             end
-          else
-            flash.now[:old] = 'Current Password failed validation. Password was not changed.'
           end
+        else
+          flash.now[:alert] = 'Update failed.'
+          flash.now[:old] = 'Current Password failed validation. Password was not changed.'
         end
       end
     else
@@ -54,19 +55,10 @@ class MiscController < ApplicationController
     end
   end
 
-  def password_check
-    result = false
-
-    if params[:input_form][:password].present?
-      if current_user.valid_password?(params[:input_form][:old_password])
-        result = true
-      else
-
-      end
-    else
-      result = true
-    end
-
-    return result
+  def password_check(new_password, old_password)
+    puts 'NEW: ' + new_password.blank?.to_s
+    puts 'OLD: ' + current_user.valid_password?(params[:input_form][:old_password]).to_s
+    # If the user isn't changing their password or if their old password is present and valid.
+    params[:input_form][:password].blank? || current_user.valid_password?(params[:input_form][:old_password])
   end
 end
