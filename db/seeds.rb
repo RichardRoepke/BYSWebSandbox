@@ -5,9 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-User.create!({email: 'admin@admin.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', confirmed_at: Time.zone.now, admin: true})
-User.create!({email: 'user@user.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', confirmed_at: Time.zone.now, admin: false})
+User.create!({email: 'admin@admin.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', confirmed_at: Time.zone.now, admin: true, security: 'Yes'})
+User.create!({email: 'user@user.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', confirmed_at: Time.zone.now, admin: false, security: 'No'})
 
 50.times do |num|
-  User.create!({email: num.to_s + '@number.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', admin: false})
+  User.create!({email: num.to_s + '@number.org', password: 'asdfasdf', password_confirmation: 'asdfasdf', admin: false, security: 'Testing ' + num.to_s})
 end

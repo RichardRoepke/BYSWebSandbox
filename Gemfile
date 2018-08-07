@@ -42,7 +42,6 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'therubyracer'
 gem 'execjs'
 
-
 gem 'devise'
 gem 'will_paginate'
 
