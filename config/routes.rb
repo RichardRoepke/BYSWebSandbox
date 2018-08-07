@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   get  '/reservationreverse', to: 'services#res_reverse'
 
   get  '/textparse', to: 'misc#text_parse'
+  get  '/account', to: 'misc#account'
 
   namespace :admin do
     resources :user

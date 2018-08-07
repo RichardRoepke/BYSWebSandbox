@@ -101,5 +101,4 @@ class Admin::UserController < AdminServicesController
   def new_user_params
     params.require(:user).permit(:email, :security, :admin, :password, :password_confirmation)
   end
-
 end

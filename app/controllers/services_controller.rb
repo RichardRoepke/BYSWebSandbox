@@ -74,6 +74,7 @@ class ServicesController < ApplicationController
     else
       @set = { date: {}, unit: {}, site: {}, site_choice: {} }
       @set[:site_choice] = { site1: {}, site2: {}, site3: {} } if params[:action] == "site_usage"
+      @set[:security_key] = current_user.security if current_user.security.present?
       @billing = 1
       @billing_index = ["0"]
       @billing_array = [["","",""]]
