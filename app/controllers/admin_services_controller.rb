@@ -4,6 +4,13 @@ class AdminServicesController < ApplicationController
   def admin
   end
 
+  def new_user
+    @user = User.new
+    @user.email = params[:email]
+    @user.security = params[:security]
+    @user.admin = params[:admin]
+  end
+
   def ensure_admin
     unless current_user.try(:admin?)
       if current_user.present?

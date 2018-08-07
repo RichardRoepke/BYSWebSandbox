@@ -3,7 +3,7 @@
 <div class="form">
   <div class="col-md-6 col-md-offset-3">
     <%= form_for @user, url: {action: "update"} do |f| %>
-      <h3><%= @user.email %></h3>
+      <h3><%= @user.email %> <%= '(Admin)' if @user.admin%></h3>
 
       <%= f.label :security, "Camp Ground Security Key" %>
       <%= f.text_field :security %>
@@ -24,4 +24,4 @@
 
 <hr />
 
-<%= link_to 'Back to Index', admin_user_index_path %>
+<%= link_to 'Back to Index', :back %>
