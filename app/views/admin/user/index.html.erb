@@ -4,9 +4,11 @@
     <li>
         <%= user.email%><i><%= ' (Admin)' if user.admin.present? %></i>: <%= link_to 'Edit', edit_admin_user_path(user) %>,
         <% if current_user.try(:admin?) && !(current_user == user) %>
-          <%= link_to "Delete", admin_user_path(user.id), method: :delete, data: { confirm: "Are you sure you wish to delete #{user.email}?" } %>
+          <%= link_to "Delete", admin_user_path(user.id), method: :delete, data: { confirm: "Are you sure you wish to delete #{user.email}?" } %>,
+          <%= link_to "Promote", admin_user_promote_path(user.id), method: :get, data: { confirm: "Are you sure you wish to promote #{user.email}?" } unless user.admin %>
+          <%= link_to "Demote", admin_user_demote_path(user.id), method: :get, data: { confirm: "Are you sure you wish to demote #{user.email}?" } if user.admin %>
         <% else %>
-          (Currently Logged In)
+          <i>(Currently Logged In)</i>
         <% end %>
     </li>
 <% end %>

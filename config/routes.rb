@@ -6,7 +6,8 @@ Rails.application.routes.draw do
 
   get  '/admin', to: 'admin_services#admin'
   get  '/admin/newuser', to: 'admin_services#new_user'
-  get  '/admin/user/reset', to: 'admin/user#reset'
+  get  '/admin/user/promote', to: 'admin/user#promote'
+  get  '/admin/user/demote', to: 'admin/user#demote'
 
   get  '/utility', to: 'services#utility'
   get  '/availability', to: 'services#availability'

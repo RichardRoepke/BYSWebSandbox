@@ -30,14 +30,15 @@ class Admin::UserController < AdminServicesController
 
   def destroy
     user = User.find(params[:id])
+
     if user == current_user
       flash[:success] = "Can't delete currently logged in user."
-      redirect_back(fallback_location: root_path)
     else
       user.destroy
       flash[:success] = "User deleted."
-      redirect_back(fallback_location: root_path)
     end
+
+    redirect_back(fallback_location: root_path)
   end
 
   def update
@@ -50,7 +51,6 @@ class Admin::UserController < AdminServicesController
       else
         flash[:alert] = 'Profile failed to update.'
         @user.errors.full_messages.each do |error|
-          puts 'ERROR: ' + error.to_s
           flash[error.to_sym] = error
         end
         redirect_to edit_admin_user_path(@user.id)
@@ -58,11 +58,43 @@ class Admin::UserController < AdminServicesController
     end
   end
 
+  def promote
+    # I have no idea why user.id is turned into :format instead of :id for this
+    # function. Perhaps because it was declared outside of devise/the model?
+    user = User.find(params[:format])
+    user.admin = true
+    if user.save
+      flash[:success] = "User has been promoted to administrator."
+    else
+      user.errors.full_messages.each do |error|
+        flash[error.to_sym] = error
+      end
+    end
+
+    redirect_back(fallback_location: root_path)
+  end
+
+  def demote
+    # I have no idea why user.id is turned into :format instead of :id for this
+    # function. Perhaps because it was declared outside of devise/the model?
+    user = User.find(params[:format])
+    user.admin = false
+    if user.save
+      flash[:success] = "User has been demoted from administrator."
+    else
+      user.errors.full_messages.each do |error|
+        flash[error.to_sym] = error
+      end
+    end
+
+    redirect_back(fallback_location: root_path)
+  end
+
   def user_params
     if params[:user][:password].present? && params[:user][:password_confirmation].present?
-      params.require(:user).permit(:email, :security, :password, :password_confirmation)
+      params.require(:user).permit(:security, :password, :password_confirmation)
     else
-      params.require(:user).permit(:email, :security)
+      params.require(:user).permit(:security)
     end
   end
 
