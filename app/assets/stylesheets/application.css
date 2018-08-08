@@ -81,11 +81,11 @@ th { padding-top: 7px; text-align: right; white-space: nowrap; }
 .subnav a.button:hover { background-color: #dc0000; color: #fff; }
 
 /* maincontent */
-.maincontent { 
+.maincontent {
   margin-left: 10px;
   margin-right: 10px;
   margin-top: 54px;
-  padding: 10px; 
+  padding: 10px;
 }
 
 /*#sidebar { width: 300px; float: left; margin-right: 10px; }*/
@@ -119,6 +119,8 @@ table.formgroup td { padding: 2px 5px; vertical-align: top; }
 
 /* error stuff */
 .notice { border: 1px solid #a32122; background-color: #f6f4e4; padding: 10px; margin: 0 0 10px 0; color: #7c261d; }
+
+.alert { border: 1px solid #a32122; background-color: #f6f4e4; padding: 10px; margin: 0 0 10px 0; color: #7c261d; }
 
 .fieldWithErrors { display: inline; }
 
