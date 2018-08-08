@@ -8,6 +8,7 @@ class Admin::UserController < AdminServicesController
       flash[:success] = 'User made.'
       redirect_to admin_path
     else
+      flash[:alert] = 'User could not be made.'
       @user.errors.full_messages.each do |error|
         flash[error.to_sym] = error
       end

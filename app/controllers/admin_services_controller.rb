@@ -6,6 +6,8 @@ class AdminServicesController < ApplicationController
 
   def new_user
     @user = User.new
+    # Sets up user fields if values are present in params.
+    # Should only occur if creating a new user failed.
     @user.email = params[:email]
     @user.security = params[:security]
     @user.admin = params[:admin]
