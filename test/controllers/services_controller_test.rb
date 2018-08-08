@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ServicesControllerTest < ActionDispatch::IntegrationTest
   def setup
-    sign_in_user
+    sign_in users(:one)
 
     @requestIDs = %w[ UnitTypeInfoRequest
                       SiteTypeInfoRequest
@@ -131,6 +131,40 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
                         park_ID: 'M00000',
                         security_key: 'yes',
                         res_token: 'Sure' }
+  end
+
+  test 'general: security key renders if present' do
+    get utility_path
+    assert_select 'input[value=?]', "present"
+    # The 6 buttons, one hidden field for encoding, and the value in the security key field.
+    assert_select 'input[value]', count: 8
+
+    sign_out users(:one)
+    sign_in users(:three)
+
+    get utility_path
+    # The 6 buttons and one hidden field for encoding.
+    assert_select 'input[value]', count: 7
+  end
+
+  test 'general: security key renders differently for different users' do
+    get utility_path
+    assert_select 'input[value=?]', "present"
+    assert_select 'input[value=?]', "accounted", false
+
+    sign_out users(:one)
+    sign_in users(:two)
+
+    get utility_path
+    assert_select 'input[value=?]', "present", false
+    assert_select 'input[value=?]', "accounted"
+  end
+
+  test 'general: should redirect when not logged in' do
+    sign_out users(:one)
+    get utility_path
+    assert_response :found
+    assert_redirected_to new_user_session_path
   end
 
   # ===============================================

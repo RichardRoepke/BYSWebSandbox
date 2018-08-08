@@ -20,6 +20,7 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
   test 'should redirect when not logged in' do
     get utility_path
     assert_response :found
+    assert_redirected_to new_user_session_path
   end
 
   test 'should get main' do
@@ -55,8 +56,10 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     get service_path
     assert_response :found
+    assert_redirected_to new_user_session_path
     get misc_path
     assert_response :found
+    assert_redirected_to new_user_session_path
 
     sign_in users(:one)
 

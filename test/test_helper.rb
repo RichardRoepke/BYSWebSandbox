@@ -10,12 +10,4 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml
   # for all tests in alphabetical order.
   fixtures :all
-
-  def sign_in_user
-    user = users(:one)
-    user.confirmed_at = Time.zone.now
-    user.save
-
-    sign_in user
-  end
 end
