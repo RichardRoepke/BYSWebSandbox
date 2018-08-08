@@ -9,19 +9,15 @@ class Admin::UserController < AdminServicesController
       redirect_to admin_path
     else
       @user.errors.full_messages.each do |error|
-        puts 'ERROR: ' + error.to_s
         flash[error.to_sym] = error
       end
+      # Returning to the page which requested the new user.
       redirect_to admin_newuser_path(params.require(:user).permit(:email, :security, :admin))
     end
   end
 
   def index
     @users = User.all.paginate(page: params[:page], per_page: 30)
-  end
-
-  def show
-    @user = User.find(params[:id])
   end
 
   def edit
@@ -34,8 +30,14 @@ class Admin::UserController < AdminServicesController
     if user == current_user
       flash[:success] = "Can't delete currently logged in user."
     else
-      user.destroy
-      flash[:success] = "User deleted."
+      if user.destroy
+        flash[:success] = "User deleted."
+      else
+        flash[:alert] = 'User could not be deleted.'
+        user.errors.full_messages.each do |error|
+          flash[error.to_sym] = error
+        end if users.errors.present?
+      end
     end
 
     redirect_back(fallback_location: root_path)
@@ -53,7 +55,7 @@ class Admin::UserController < AdminServicesController
         @user.errors.full_messages.each do |error|
           flash[error.to_sym] = error
         end
-        redirect_to edit_admin_user_path(@user.id)
+        redirect_back(fallback_location: root_path)
       end
     end
   end
@@ -61,37 +63,33 @@ class Admin::UserController < AdminServicesController
   def promote
     # I have no idea why user.id is turned into :format instead of :id for this
     # function. Perhaps because it was declared outside of devise/the model?
-    user = User.find(params[:format])
-    user.admin = true
-    if user.save
-      flash[:success] = "User has been promoted to administrator."
-    else
-      user.errors.full_messages.each do |error|
-        flash[error.to_sym] = error
-      end
-    end
-
+    change_admin_status(params[:format], true, "User has been promoted to administrator.")
     redirect_back(fallback_location: root_path)
   end
 
   def demote
     # I have no idea why user.id is turned into :format instead of :id for this
     # function. Perhaps because it was declared outside of devise/the model?
-    user = User.find(params[:format])
-    user.admin = false
+    change_admin_status(params[:format], false, "User has been demoted from administrator.")
+    redirect_back(fallback_location: root_path)
+  end
+
+  private
+
+  def change_admin_status(id, status, message)
+    user = User.find(id)
+    user.admin = status
     if user.save
-      flash[:success] = "User has been demoted from administrator."
+      flash[:success] = message
     else
       user.errors.full_messages.each do |error|
         flash[error.to_sym] = error
       end
     end
-
-    redirect_back(fallback_location: root_path)
   end
 
   def user_params
-    if params[:user][:password].present? && params[:user][:password_confirmation].present?
+    if params[:user][:password].present?
       params.require(:user).permit(:security, :password, :password_confirmation)
     else
       params.require(:user).permit(:security)
