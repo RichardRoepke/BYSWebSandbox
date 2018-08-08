@@ -25,28 +25,9 @@ class Admin::UserController < AdminServicesController
     @user = User.find(params[:id])
   end
 
-  def destroy
-    user = User.find(params[:id])
-
-    if user == current_user
-      flash[:success] = "Can't delete currently logged in user."
-    else
-      if user.destroy
-        flash[:success] = "User deleted."
-      else
-        flash[:alert] = 'User could not be deleted.'
-        user.errors.full_messages.each do |error|
-          flash[error.to_sym] = error
-        end if users.errors.present?
-      end
-    end
-
-    redirect_back(fallback_location: root_path)
-  end
-
   def update
     if params[:user].present?
-      @user = User.find(params[:user][:id])
+      @user = User.find(params[:id])
 
       if @user.update(user_params)
         flash[:success] = "Profile updated."
@@ -59,6 +40,28 @@ class Admin::UserController < AdminServicesController
         redirect_back(fallback_location: root_path)
       end
     end
+  end
+
+  def destroy
+    user = User.find(params[:id])
+      if user == current_user
+        flash[:alert] = "Can't delete currently logged in user."
+      else
+        if user.destroy
+          flash[:success] = "User deleted."
+        else
+          flash[:alert] = 'User could not be deleted.'
+          user.errors.full_messages.each do |error|
+            flash[error.to_sym] = error
+          end if users.errors.present?
+        end
+      end
+
+    redirect_back(fallback_location: root_path)
+  rescue => exception
+    flash[:alert] = 'An exception occured.'
+    flash[:exception] = exception.inspect
+    redirect_back(fallback_location: root_path)
   end
 
   def promote
@@ -79,12 +82,17 @@ class Admin::UserController < AdminServicesController
 
   def change_admin_status(id, status, message)
     user = User.find(id)
-    user.admin = status
-    if user.save
-      flash[:success] = message
+
+    if user == current_user
+      flash[:alert] = 'Cannot change admin status of the current user.'
     else
-      user.errors.full_messages.each do |error|
-        flash[error.to_sym] = error
+      user.admin = status
+      if user.save
+        flash[:success] = message
+      else
+        user.errors.full_messages.each do |error|
+          flash[error.to_sym] = error
+        end
       end
     end
   end
