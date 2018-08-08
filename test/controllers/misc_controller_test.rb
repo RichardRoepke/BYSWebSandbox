@@ -46,6 +46,13 @@ class MiscControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'account: need to enter current password to change the password' do
+    sign_out users(:one)
+
+    # The obvious solution to being unable to setup an ecrypted passwords in the fixtures.
+    user = User.new({email: 'foobar@foo.com', password: 'foobar', password_confirmation: 'foobar'})
+    user.save
+    sign_in user
+
     get account_path, params: { input_form: { password: 'barfoo', password_confirmation: 'barfoo' }, commit: 'Update Account' }
     assert_response :success
     assert flash[:alert].present?

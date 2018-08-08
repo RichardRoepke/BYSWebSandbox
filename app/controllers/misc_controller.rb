@@ -56,8 +56,6 @@ class MiscController < ApplicationController
   end
 
   def password_check(new_password, old_password)
-    puts 'NEW: ' + new_password.blank?.to_s
-    puts 'OLD: ' + current_user.valid_password?(params[:input_form][:old_password]).to_s
     # If the user isn't changing their password or if their old password is present and valid.
     params[:input_form][:password].blank? || current_user.valid_password?(params[:input_form][:old_password])
   end
