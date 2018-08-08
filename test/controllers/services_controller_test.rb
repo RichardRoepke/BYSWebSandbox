@@ -2,6 +2,8 @@ require 'test_helper'
 
 class ServicesControllerTest < ActionDispatch::IntegrationTest
   def setup
+    sign_in_user
+
     @requestIDs = %w[ UnitTypeInfoRequest
                       SiteTypeInfoRequest
                       NotesAndTermsRequest

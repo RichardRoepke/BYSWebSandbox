@@ -1,0 +1,29 @@
+<% provide(:title, "New User") %>
+
+<div class="form">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for @user, url: new_admin_user_path(@user), method: :get do |f| %>
+      <%= f.label :email, "User Email" %>
+      <%= f.text_field :email %>
+
+      <%= f.label :security, "Camp Ground Security Key (Optional)" %>
+      <%= f.text_field :security %>
+
+      <%= f.label :admin, "Admin?" %>
+      <%= f.check_box :admin %>
+
+
+      <div class="field">
+        <%= f.label :password, "Password (Minimum 6 characters)" %> <br />
+        <%= f.password_field :password %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation, "Password Confirmation" %> <br />
+        <%= f.password_field :password_confirmation %>
+      </div>
+
+      <%= f.submit "Create User" %>
+    <% end %>
+  </div>
+</div>

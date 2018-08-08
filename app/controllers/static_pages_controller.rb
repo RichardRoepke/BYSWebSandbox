@@ -1,13 +1,12 @@
 class StaticPagesController < ApplicationController
+  before_action :authenticate_user!, except: :main
+
   def main
-    @output = {}
   end
-  
+
   def service
-    @output = {}
   end
-  
+
   def misc
-    @output = {}
   end
 end

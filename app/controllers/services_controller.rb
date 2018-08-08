@@ -2,6 +2,9 @@ require 'builder'
 require 'rexml/document'
 
 class ServicesController < ApplicationController
+
+  before_action :authenticate_user!
+
   def utility
     page_generation
   end
@@ -39,8 +42,6 @@ class ServicesController < ApplicationController
   end
 
   def page_generation
-    @output = {}
-
     if params[:input_form]
       @set = params[:input_form]
 
@@ -73,6 +74,7 @@ class ServicesController < ApplicationController
     else
       @set = { date: {}, unit: {}, site: {}, site_choice: {} }
       @set[:site_choice] = { site1: {}, site2: {}, site3: {} } if params[:action] == "site_usage"
+      @set[:security_key] = current_user.security if current_user.security.present?
       @billing = 1
       @billing_index = ["0"]
       @billing_array = [["","",""]]
