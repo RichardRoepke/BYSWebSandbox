@@ -67,6 +67,43 @@ class ServiceValidatorTest < ActiveSupport::TestCase
     assert_not @service.valid?
   end
 
+  test 'version value if present' do
+    @service.version_num = nil
+    assert @service.valid?
+
+    @service.version_num = 1
+    assert @service.valid?
+
+    @service.version_num = 0
+    assert_not @service.valid?
+  end
+
+  test 'json_recursive_reformat has no effect on hashes without arrays' do
+    hash = { test: { tester: { testone: '1',
+                                testtwo: '2',
+                                testthree: '3' },
+                     testing: 'yes' } }
+    assert @service.json_recursive_reformat(hash) == hash
+  end
+
+  test 'json_recursive_reformat reformats hashes with arrays' do
+    hash = { test: { array: [0, 1, 3] },
+             side: 'foobar' }
+    expected = { test: [{array: 0}, {array: 1}, {array: 3}],
+                  side: 'foobar' }
+    result = @service.json_recursive_reformat(hash)
+    assert_not result == hash
+    assert result == expected
+  end
+
+  test 'reformat_array returns properly formatted array' do
+    hash = { array: [0, 1, 3] }
+    expected = [{array: 0}, {array: 1}, {array: 3}]
+
+    result = @service.reformat_array(hash)
+    assert result == expected
+  end
+
   # test 'security key must use alphanumeric' do
   #  @service.securityKey = '%'
   #  assert_not @service.valid?
